@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+scikit-learn
+pypdf
+python-multipart
+pydantic-settings
