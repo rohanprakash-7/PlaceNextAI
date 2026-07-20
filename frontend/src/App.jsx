@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import StudentDashboard from "./pages/StudentDashboard.jsx";
 import StudentResumePage from "./pages/StudentResumePage.jsx";
+import StudentRoadmapPage from "./pages/StudentRoadmapPage.jsx";
 import RecruiterDashboard from "./pages/RecruiterDashboard.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminStudents from "./pages/AdminStudents.jsx";
@@ -51,6 +52,14 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={["ROLE_STUDENT"]}>
                 <StudentResumePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/student/roadmap"
+            element={
+              <ProtectedRoute allowedRoles={["ROLE_STUDENT"]}>
+                <StudentRoadmapPage />
               </ProtectedRoute>
             }
           />

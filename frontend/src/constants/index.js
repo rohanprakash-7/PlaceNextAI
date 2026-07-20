@@ -101,7 +101,7 @@ export const STUDENT_NAV = [
   { label: "Resume Analyzer", icon: FiFileText, to: "/dashboard/student/resume" },
   { label: "Mock Interviews", icon: FiMic },
   { label: "Job Matches", icon: FiTarget },
-  { label: "Skill Roadmap", icon: FiTrendingUp },
+  { label: "Skill Roadmap", icon: FiTrendingUp, to: "/dashboard/student/roadmap" },
   { label: "Settings", icon: FiSettings },
 ];
 
