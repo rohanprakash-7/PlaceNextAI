@@ -6,7 +6,9 @@ import com.placenextai.entity.ReadinessScore;
 import com.placenextai.entity.ScoreConfig;
 import com.placenextai.entity.Student;
 import com.placenextai.exception.ResourceNotFoundException;
+import com.placenextai.entity.RecruiterFeedback;
 import com.placenextai.repository.PlatformEventRepository;
+import com.placenextai.repository.RecruiterFeedbackRepository;
 import com.placenextai.repository.ReadinessScoreRepository;
 import com.placenextai.repository.ScoreConfigRepository;
 import com.placenextai.repository.StudentRepository;
@@ -28,6 +30,7 @@ public class ReadinessServiceImpl implements ReadinessService {
     private final ReadinessScoreRepository scoreRepository;
     private final ScoreConfigRepository configRepository;
     private final PlatformEventRepository eventRepository;
+    private final RecruiterFeedbackRepository feedbackRepository;
 
     private static final Map<String, String> TIPS = Map.of(
             "Academic", "Focus on your CGPA and core subjects - academic strength anchors your score.",
@@ -96,7 +99,7 @@ public class ReadinessServiceImpl implements ReadinessService {
         int skills = skillScore(student);
         int interview = interviewScore(student);
         int activity = activityScore(student);
-        int feedbackAdjustment = 0; // wired in the recruiter-feedback phase
+        int feedbackAdjustment = feedbackAdjustment(student, config);
 
         double weighted =
                 academic * config.getAcademicWeight()
@@ -150,6 +153,28 @@ public class ReadinessServiceImpl implements ReadinessService {
         long recentEvents = eventRepository.countByStudentIdAndCreatedAtAfter(
                 student.getId(), LocalDateTime.now().minusDays(30));
         return clamp((int) (recentEvents * 5));
+    }
+
+    /**
+     * Turns recruiter feedback into a bounded score nudge: average rating 3/5
+     * (neutral) contributes nothing, 5/5 adds up to the configured cap, 1/5
+     * subtracts up to the cap. This is the step that closes the loop -
+     * what a recruiter reports back changes the student's own score.
+     */
+    private int feedbackAdjustment(Student student, ScoreConfig config) {
+        List<RecruiterFeedback> feedback = feedbackRepository.findByStudentIdOrderByCreatedAtDesc(student.getId());
+        if (feedback.isEmpty()) {
+            return 0;
+        }
+        double averageRating = feedback.stream()
+                .mapToDouble(entry -> (entry.getCommunicationRating() + entry.getTechnicalRating()
+                        + entry.getProblemSolvingRating() + entry.getCultureFitRating()) / 4.0)
+                .average()
+                .orElse(3.0);
+
+        int cap = config.getFeedbackAdjustmentCap();
+        int adjustment = (int) Math.round((averageRating - 3.0) / 2.0 * cap);
+        return Math.max(-cap, Math.min(cap, adjustment));
     }
 
     private int clamp(int value) {

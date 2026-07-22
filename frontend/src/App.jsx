@@ -9,6 +9,8 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import StudentDashboard from "./pages/StudentDashboard.jsx";
 import StudentResumePage from "./pages/StudentResumePage.jsx";
 import StudentRoadmapPage from "./pages/StudentRoadmapPage.jsx";
+import StudentApplicationsPage from "./pages/StudentApplicationsPage.jsx";
+import RecruiterApplicationsPage from "./pages/RecruiterApplicationsPage.jsx";
 import RecruiterDashboard from "./pages/RecruiterDashboard.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminStudents from "./pages/AdminStudents.jsx";
@@ -64,10 +66,26 @@ export default function App() {
             }
           />
           <Route
+            path="/dashboard/student/applications"
+            element={
+              <ProtectedRoute allowedRoles={["ROLE_STUDENT"]}>
+                <StudentApplicationsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/dashboard/recruiter"
             element={
               <ProtectedRoute allowedRoles={["ROLE_RECRUITER"]}>
                 <RecruiterDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/recruiter/applications"
+            element={
+              <ProtectedRoute allowedRoles={["ROLE_RECRUITER"]}>
+                <RecruiterApplicationsPage />
               </ProtectedRoute>
             }
           />

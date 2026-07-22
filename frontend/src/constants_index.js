@@ -100,7 +100,7 @@ export const STUDENT_NAV = [
   { label: "Overview", icon: FiHome, to: "/dashboard/student" },
   { label: "Resume Analyzer", icon: FiFileText, to: "/dashboard/student/resume" },
   { label: "Mock Interviews", icon: FiMic },
-  { label: "Applications", icon: FiBriefcase, to: "/dashboard/student/applications" },
+  { label: "Job Matches", icon: FiTarget, to: "/dashboard/student/applications" },
   { label: "Skill Roadmap", icon: FiTrendingUp, to: "/dashboard/student/roadmap" },
   { label: "Settings", icon: FiSettings },
 ];
@@ -108,7 +108,7 @@ export const STUDENT_NAV = [
 export const RECRUITER_NAV = [
   { label: "Overview", icon: FiHome, to: "/dashboard/recruiter" },
   { label: "Job Postings", icon: FiBriefcase },
- { label: "Applications", icon: FiUsers, to: "/dashboard/recruiter/applications" },
+  { label: "Candidates", icon: FiUsers, to: "/dashboard/recruiter/applications" },
   { label: "AI Shortlists", icon: FiZap },
   { label: "Analytics", icon: FiBarChart2 },
   { label: "Settings", icon: FiSettings },
