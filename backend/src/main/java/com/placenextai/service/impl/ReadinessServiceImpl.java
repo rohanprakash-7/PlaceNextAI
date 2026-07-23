@@ -79,6 +79,11 @@ public class ReadinessServiceImpl implements ReadinessService {
         if (Math.abs(sum - 1.0) > 0.001) {
             throw new IllegalArgumentException("Weights must sum to 1.0 (currently " + sum + ")");
         }
+        double rankSum = request.getRankSkillWeight() + request.getRankReadinessWeight()
+                + request.getRankPredictionWeight() + request.getRankInterviewWeight();
+        if (Math.abs(rankSum - 1.0) > 0.001) {
+            throw new IllegalArgumentException("Ranking weights must sum to 1.0 (currently " + rankSum + ")");
+        }
         ScoreConfig config = currentConfig();
         config.setAcademicWeight(request.getAcademicWeight());
         config.setResumeWeight(request.getResumeWeight());
@@ -86,6 +91,10 @@ public class ReadinessServiceImpl implements ReadinessService {
         config.setInterviewWeight(request.getInterviewWeight());
         config.setActivityWeight(request.getActivityWeight());
         config.setFeedbackAdjustmentCap(request.getFeedbackAdjustmentCap());
+        config.setRankSkillWeight(request.getRankSkillWeight());
+        config.setRankReadinessWeight(request.getRankReadinessWeight());
+        config.setRankPredictionWeight(request.getRankPredictionWeight());
+        config.setRankInterviewWeight(request.getRankInterviewWeight());
         return toDto(configRepository.save(config));
     }
 
@@ -221,8 +230,24 @@ public class ReadinessServiceImpl implements ReadinessService {
     }
 
     private ScoreConfig currentConfig() {
-        return configRepository.findTopByOrderByIdAsc()
+        ScoreConfig config = configRepository.findTopByOrderByIdAsc()
                 .orElseGet(() -> configRepository.save(defaultConfig()));
+
+        // A config row created before the Phase 6.2 ranking columns existed
+        // gets those columns added as 0 by the schema update, not backfilled
+        // with the code-level defaults below - fix that up the first time
+        // such a row is read, rather than leaving ranking permanently zeroed.
+        double rankWeightSum = config.getRankSkillWeight() + config.getRankReadinessWeight()
+                + config.getRankPredictionWeight() + config.getRankInterviewWeight();
+        if (rankWeightSum == 0) {
+            config.setRankSkillWeight(0.35);
+            config.setRankReadinessWeight(0.25);
+            config.setRankPredictionWeight(0.25);
+            config.setRankInterviewWeight(0.15);
+            config = configRepository.save(config);
+        }
+
+        return config;
     }
 
     private ScoreConfig defaultConfig() {
@@ -233,6 +258,10 @@ public class ReadinessServiceImpl implements ReadinessService {
                 .interviewWeight(0.20)
                 .activityWeight(0.15)
                 .feedbackAdjustmentCap(10)
+                .rankSkillWeight(0.35)
+                .rankReadinessWeight(0.25)
+                .rankPredictionWeight(0.25)
+                .rankInterviewWeight(0.15)
                 .build();
     }
 
@@ -244,6 +273,10 @@ public class ReadinessServiceImpl implements ReadinessService {
                 .interviewWeight(config.getInterviewWeight())
                 .activityWeight(config.getActivityWeight())
                 .feedbackAdjustmentCap(config.getFeedbackAdjustmentCap())
+                .rankSkillWeight(config.getRankSkillWeight())
+                .rankReadinessWeight(config.getRankReadinessWeight())
+                .rankPredictionWeight(config.getRankPredictionWeight())
+                .rankInterviewWeight(config.getRankInterviewWeight())
                 .build();
     }
 

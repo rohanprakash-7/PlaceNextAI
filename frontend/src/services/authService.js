@@ -15,6 +15,11 @@ export async function registerRecruiter(payload) {
   return data;
 }
 
+export async function registerAlumni(payload) {
+  const { data } = await axiosClient.post("/auth/alumni/register", payload);
+  return data;
+}
+
 export async function getMe() {
   const { data } = await axiosClient.get("/auth/me");
   return data;

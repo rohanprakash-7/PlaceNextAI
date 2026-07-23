@@ -14,6 +14,7 @@ public class DataSeeder implements CommandLineRunner {
     private final AdminRepository adminRepository;
     private final StudentRepository studentRepository;
     private final RecruiterRepository recruiterRepository;
+    private final AlumniRepository alumniRepository;
     private final JobRepository jobRepository;
     private final ApplicationRepository applicationRepository;
     private final PasswordEncoder passwordEncoder;
@@ -23,6 +24,7 @@ public class DataSeeder implements CommandLineRunner {
         seedAdmin();
         Student student = seedStudent();
         Recruiter recruiter = seedRecruiter();
+        seedAlumni();
         seedJobsAndApplication(student, recruiter);
     }
 
@@ -63,6 +65,22 @@ public class DataSeeder implements CommandLineRunner {
                         .designation("Talent Acquisition Lead")
                         .role("ROLE_RECRUITER")
                         .build()));
+    }
+
+    private void seedAlumni() {
+        if (alumniRepository.count() == 0) {
+            alumniRepository.save(Alumni.builder()
+                    .fullName("Rhea Kapoor")
+                    .email("rhea.alumni@placenextai.com")
+                    .password(passwordEncoder.encode("Alumni@123"))
+                    .currentCompany("TechNova")
+                    .designation("Senior Software Engineer")
+                    .graduationYear(2021)
+                    .expertise("Java,Spring Boot,System Design,Interview Prep")
+                    .bio("JNTU Hyderabad alum, now on the backend platform team at TechNova. Happy to help with interview prep and career questions.")
+                    .role("ROLE_ALUMNI")
+                    .build());
+        }
     }
 
     private void seedJobsAndApplication(Student student, Recruiter recruiter) {

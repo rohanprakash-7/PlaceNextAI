@@ -1,5 +1,6 @@
 package com.placenextai.controller;
 
+import com.placenextai.dto.AlumniRegisterRequest;
 import com.placenextai.dto.AuthResponse;
 import com.placenextai.dto.LoginRequest;
 import com.placenextai.dto.MeResponse;
@@ -40,6 +41,16 @@ public class AuthController {
     @PostMapping("/recruiter/login")
     public ResponseEntity<AuthResponse> loginRecruiter(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request, "ROLE_RECRUITER"));
+    }
+
+    @PostMapping("/alumni/register")
+    public ResponseEntity<AuthResponse> registerAlumni(@Valid @RequestBody AlumniRegisterRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerAlumni(request));
+    }
+
+    @PostMapping("/alumni/login")
+    public ResponseEntity<AuthResponse> loginAlumni(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request, "ROLE_ALUMNI"));
     }
 
     @PostMapping("/admin/login")

@@ -1,16 +1,19 @@
 package com.placenextai.service.impl;
 
+import com.placenextai.dto.AlumniRegisterRequest;
 import com.placenextai.dto.AuthResponse;
 import com.placenextai.dto.LoginRequest;
 import com.placenextai.dto.MeResponse;
 import com.placenextai.dto.RecruiterRegisterRequest;
 import com.placenextai.dto.StudentRegisterRequest;
 import com.placenextai.entity.Admin;
+import com.placenextai.entity.Alumni;
 import com.placenextai.entity.Recruiter;
 import com.placenextai.entity.Student;
 import com.placenextai.exception.DuplicateResourceException;
 import com.placenextai.exception.ResourceNotFoundException;
 import com.placenextai.repository.AdminRepository;
+import com.placenextai.repository.AlumniRepository;
 import com.placenextai.repository.RecruiterRepository;
 import com.placenextai.repository.StudentRepository;
 import com.placenextai.entity.EventType;
@@ -36,6 +39,7 @@ public class AuthServiceImpl implements AuthService {
     private final StudentRepository studentRepository;
     private final RecruiterRepository recruiterRepository;
     private final AdminRepository adminRepository;
+    private final AlumniRepository alumniRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -82,6 +86,27 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
+    public AuthResponse registerAlumni(AlumniRegisterRequest request) {
+        assertEmailIsFree(request.getEmail());
+
+        Alumni alumni = Alumni.builder()
+                .fullName(request.getFullName())
+                .email(request.getEmail().toLowerCase())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .currentCompany(request.getCurrentCompany())
+                .designation(request.getDesignation())
+                .graduationYear(request.getGraduationYear())
+                .expertise(request.getExpertise())
+                .bio(request.getBio())
+                .role("ROLE_ALUMNI")
+                .build();
+
+        Alumni saved = alumniRepository.save(alumni);
+        return buildResponse(saved.getId(), saved.getFullName(), saved.getEmail(), saved.getRole());
+    }
+
+    @Override
     public AuthResponse login(LoginRequest request, String expectedRole) {
         AuthResponse response = login(request);
         if (!response.getRole().equals(expectedRole)) {
@@ -107,6 +132,12 @@ public class AuthServiceImpl implements AuthService {
         if (recruiter.isPresent()) {
             Recruiter found = recruiter.get();
             return buildResponse(found.getId(), found.getRecruiterName(), found.getEmail(), found.getRole());
+        }
+
+        Optional<Alumni> alumni = alumniRepository.findByEmail(email);
+        if (alumni.isPresent()) {
+            Alumni found = alumni.get();
+            return buildResponse(found.getId(), found.getFullName(), found.getEmail(), found.getRole());
         }
 
         Optional<Student> student = studentRepository.findByEmail(email);
@@ -146,6 +177,18 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
 
+        Optional<Alumni> alumni = alumniRepository.findByEmail(email);
+        if (alumni.isPresent()) {
+            Alumni found = alumni.get();
+            return MeResponse.builder()
+                    .id(found.getId())
+                    .name(found.getFullName())
+                    .email(found.getEmail())
+                    .role(found.getRole())
+                    .profileCompletion(alumniCompletion(found))
+                    .build();
+        }
+
         Student student = studentRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("No account found with email: " + email));
 
@@ -182,6 +225,17 @@ public class AuthServiceImpl implements AuthService {
         return Math.round(filled * 100f / total);
     }
 
+    private int alumniCompletion(Alumni alumni) {
+        int total = 5;
+        int filled = 0;
+        if (hasText(alumni.getFullName())) filled++;
+        if (hasText(alumni.getCurrentCompany())) filled++;
+        if (hasText(alumni.getDesignation())) filled++;
+        if (hasText(alumni.getExpertise())) filled++;
+        if (hasText(alumni.getBio())) filled++;
+        return Math.round(filled * 100f / total);
+    }
+
     private boolean hasText(String value) {
         return value != null && !value.isBlank();
     }
@@ -202,7 +256,8 @@ public class AuthServiceImpl implements AuthService {
         String normalized = email.toLowerCase();
         boolean taken = studentRepository.existsByEmail(normalized)
                 || recruiterRepository.existsByEmail(normalized)
-                || adminRepository.existsByEmail(normalized);
+                || adminRepository.existsByEmail(normalized)
+                || alumniRepository.existsByEmail(normalized);
         if (taken) {
             throw new DuplicateResourceException("An account with this email already exists");
         }

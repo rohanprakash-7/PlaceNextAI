@@ -4,6 +4,7 @@ import DashboardLayout from "../components/dashboard/DashboardLayout.jsx";
 import CompanyPicker from "../components/roadmap/CompanyPicker.jsx";
 import SkillGapPanel from "../components/roadmap/SkillGapPanel.jsx";
 import RoadmapTimeline from "../components/roadmap/RoadmapTimeline.jsx";
+import CompanyWiseReadiness from "../components/roadmap/CompanyWiseReadiness.jsx";
 import EmptyState from "../components/ui/EmptyState.jsx";
 import ErrorState from "../components/ui/ErrorState.jsx";
 import { SkeletonBlock } from "../components/ui/Skeleton.jsx";
@@ -141,6 +142,12 @@ export default function StudentRoadmapPage() {
               )
             )}
           </div>
+        </div>
+      )}
+
+      {!loading && (
+        <div className="mt-5">
+          <CompanyWiseReadiness />
         </div>
       )}
     </DashboardLayout>

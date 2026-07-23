@@ -12,6 +12,9 @@ import {
   FiSettings,
   FiActivity,
   FiCpu,
+  FiPieChart,
+  FiAward,
+  FiCalendar,
 } from "react-icons/fi";
 
 export const APP_NAME = "PlaceNextAI";
@@ -102,6 +105,8 @@ export const STUDENT_NAV = [
   { label: "Mock Interviews", icon: FiMic },
   { label: "Applications", icon: FiBriefcase, to: "/dashboard/student/applications" },
   { label: "Skill Roadmap", icon: FiTrendingUp, to: "/dashboard/student/roadmap" },
+  { label: "Placement Prediction", icon: FiPieChart, to: "/dashboard/student/prediction" },
+  { label: "Mentors", icon: FiAward, to: "/dashboard/student/mentors" },
   { label: "Settings", icon: FiSettings },
 ];
 
@@ -109,8 +114,8 @@ export const RECRUITER_NAV = [
   { label: "Overview", icon: FiHome, to: "/dashboard/recruiter" },
   { label: "Job Postings", icon: FiBriefcase },
  { label: "Applications", icon: FiUsers, to: "/dashboard/recruiter/applications" },
-  { label: "AI Shortlists", icon: FiZap },
-  { label: "Analytics", icon: FiBarChart2 },
+  { label: "AI Shortlists", icon: FiZap, to: "/dashboard/recruiter/ranking" },
+  { label: "Analytics", icon: FiBarChart2, to: "/dashboard/recruiter/analytics" },
   { label: "Settings", icon: FiSettings },
 ];
 
@@ -119,8 +124,15 @@ export const ADMIN_NAV = [
   { label: "Students", icon: FiUsers, to: "/dashboard/admin/students" },
   { label: "Recruiters", icon: FiBriefcase, to: "/dashboard/admin/recruiters" },
   { label: "AI Services", icon: FiCpu, to: "/dashboard/admin/ai-services" },
+  { label: "Analytics", icon: FiBarChart2, to: "/dashboard/admin/analytics" },
   { label: "System Health", icon: FiActivity, to: "/dashboard/admin/system-health" },
   { label: "Settings", icon: FiSettings, to: "/dashboard/admin/settings" },
+];
+
+export const ALUMNI_NAV = [
+  { label: "Overview", icon: FiHome, to: "/dashboard/alumni" },
+  { label: "My Slots", icon: FiCalendar, to: "/dashboard/alumni/slots" },
+  { label: "Settings", icon: FiSettings },
 ];
 
 export const FOOTER_LINKS = [

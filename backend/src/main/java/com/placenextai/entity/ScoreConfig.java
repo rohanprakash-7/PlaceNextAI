@@ -36,6 +36,20 @@ public class ScoreConfig {
     @Column(nullable = false)
     private int feedbackAdjustmentCap;
 
+    // Candidate ranking weights (Phase 6.2) - separate group, validated to sum
+    // to 1.0 independently of the readiness dimension weights above.
+    @Column(nullable = false)
+    private double rankSkillWeight;
+
+    @Column(nullable = false)
+    private double rankReadinessWeight;
+
+    @Column(nullable = false)
+    private double rankPredictionWeight;
+
+    @Column(nullable = false)
+    private double rankInterviewWeight;
+
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 

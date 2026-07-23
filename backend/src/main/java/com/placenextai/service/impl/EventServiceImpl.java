@@ -1,5 +1,6 @@
 package com.placenextai.service.impl;
 
+import com.placenextai.dto.DayCountResponse;
 import com.placenextai.dto.EventResponse;
 import com.placenextai.entity.EventType;
 import com.placenextai.entity.PlatformEvent;
@@ -7,12 +8,16 @@ import com.placenextai.entity.Student;
 import com.placenextai.exception.ResourceNotFoundException;
 import com.placenextai.repository.PlatformEventRepository;
 import com.placenextai.repository.StudentRepository;
+import com.placenextai.service.BadgeService;
 import com.placenextai.service.EventService;
 import com.placenextai.service.ReadinessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,6 +27,7 @@ public class EventServiceImpl implements EventService {
     private final PlatformEventRepository eventRepository;
     private final StudentRepository studentRepository;
     private final ReadinessService readinessService;
+    private final BadgeService badgeService;
 
     @Override
     @Transactional
@@ -33,6 +39,7 @@ public class EventServiceImpl implements EventService {
                 .build());
         // Every event re-scores the student: this is the platform's core loop.
         readinessService.recomputeForStudentId(studentId, type.name());
+        badgeService.checkAndAward(studentId, type);
     }
 
     @Override
@@ -48,5 +55,27 @@ public class EventServiceImpl implements EventService {
                         .createdAt(event.getCreatedAt())
                         .build())
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DayCountResponse> activityHeatmap(String studentEmail, int days) {
+        Student student = studentRepository.findByEmail(studentEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with email: " + studentEmail));
+
+        LocalDateTime since = LocalDateTime.now().minusDays(days);
+        return eventRepository.countByDaySince(student.getId(), since).stream()
+                .map(row -> DayCountResponse.builder()
+                        .date(toLocalDate(row[0]))
+                        .count(((Number) row[1]).longValue())
+                        .build())
+                .toList();
+    }
+
+    private LocalDate toLocalDate(Object rawDate) {
+        if (rawDate instanceof Date sqlDate) {
+            return sqlDate.toLocalDate();
+        }
+        return (LocalDate) rawDate;
     }
 }

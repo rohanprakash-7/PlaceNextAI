@@ -14,3 +14,8 @@ export async function getRecentEvents() {
   const { data } = await axiosClient.get("/student/readiness/events");
   return data;
 }
+
+export async function getActivityHeatmap(days = 90) {
+  const { data } = await axiosClient.get("/student/readiness/events/heatmap", { params: { days } });
+  return data;
+}

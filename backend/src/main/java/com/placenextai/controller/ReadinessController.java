@@ -1,5 +1,6 @@
 package com.placenextai.controller;
 
+import com.placenextai.dto.DayCountResponse;
 import com.placenextai.dto.EventResponse;
 import com.placenextai.dto.ReadinessResponse;
 import com.placenextai.service.EventService;
@@ -32,5 +33,12 @@ public class ReadinessController {
     @GetMapping("/events")
     public ResponseEntity<List<EventResponse>> recentEvents(Authentication authentication) {
         return ResponseEntity.ok(eventService.recentEvents(authentication.getName()));
+    }
+
+    @GetMapping("/events/heatmap")
+    public ResponseEntity<List<DayCountResponse>> activityHeatmap(
+            Authentication authentication,
+            @RequestParam(defaultValue = "90") int days) {
+        return ResponseEntity.ok(eventService.activityHeatmap(authentication.getName(), days));
     }
 }

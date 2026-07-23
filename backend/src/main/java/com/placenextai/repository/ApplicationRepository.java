@@ -11,6 +11,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     List<Application> findByStudentOrderByAppliedDateDesc(Student student);
 
+    List<Application> findByJobOrderByAppliedDateDesc(Job job);
+
     List<Application> findByJobInOrderByAppliedDateDesc(List<Job> jobs);
 
     boolean existsByStudentAndJob(Student student, Job job);

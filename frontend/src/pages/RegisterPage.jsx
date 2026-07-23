@@ -11,6 +11,7 @@ import {
   FiLoader,
   FiBookOpen,
   FiBriefcase,
+  FiAward,
   FiAlertCircle,
 } from "react-icons/fi";
 import Logo from "../components/ui/Logo.jsx";
@@ -20,13 +21,14 @@ import { useAuth, ROLE_HOME } from "../context/AuthContext.jsx";
 const ROLES = [
   { id: "STUDENT", label: "Student", icon: FiBookOpen },
   { id: "RECRUITER", label: "Recruiter", icon: FiBriefcase },
+  { id: "ALUMNI", label: "Alumni", icon: FiAward },
 ];
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const { user, initializing, registerStudent, registerRecruiter } = useAuth();
+  const { user, initializing, registerStudent, registerRecruiter, registerAlumni } = useAuth();
 
-  const [form, setForm] = useState({ fullName: "", email: "", password: "", companyName: "" });
+  const [form, setForm] = useState({ fullName: "", email: "", password: "", companyName: "", currentCompany: "" });
   const [role, setRole] = useState("STUDENT");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -60,6 +62,13 @@ export default function RegisterPage() {
           recruiterName: form.fullName.trim(),
           email: form.email.trim(),
           password: form.password,
+        });
+      } else if (role === "ALUMNI") {
+        me = await registerAlumni({
+          fullName: form.fullName.trim(),
+          email: form.email.trim(),
+          password: form.password,
+          currentCompany: form.currentCompany.trim(),
         });
       } else {
         me = await registerStudent({
@@ -115,7 +124,7 @@ export default function RegisterPage() {
           </motion.div>
         )}
 
-        <div className="mt-6 grid grid-cols-2 gap-3">
+        <div className="mt-6 grid grid-cols-3 gap-3">
           {ROLES.map((option) => {
             const Icon = option.icon;
             const selected = role === option.id;
@@ -163,6 +172,20 @@ export default function RegisterPage() {
                 value={form.companyName}
                 onChange={handleChange}
                 placeholder="Company name"
+                className="input-glass"
+              />
+            </div>
+          )}
+
+          {role === "ALUMNI" && (
+            <div className="relative">
+              <FiAward className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
+              <input
+                type="text"
+                name="currentCompany"
+                value={form.currentCompany}
+                onChange={handleChange}
+                placeholder="Current company (optional)"
                 className="input-glass"
               />
             </div>

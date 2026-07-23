@@ -27,4 +27,16 @@ public class ScoreConfigDto {
 
     @Min(0) @Max(25) @NotNull
     private Integer feedbackAdjustmentCap;
+
+    @DecimalMin("0.0") @DecimalMax("1.0") @NotNull
+    private Double rankSkillWeight;
+
+    @DecimalMin("0.0") @DecimalMax("1.0") @NotNull
+    private Double rankReadinessWeight;
+
+    @DecimalMin("0.0") @DecimalMax("1.0") @NotNull
+    private Double rankPredictionWeight;
+
+    @DecimalMin("0.0") @DecimalMax("1.0") @NotNull
+    private Double rankInterviewWeight;
 }

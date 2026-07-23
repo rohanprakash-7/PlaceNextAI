@@ -9,15 +9,22 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import StudentDashboard from "./pages/StudentDashboard.jsx";
 import StudentResumePage from "./pages/StudentResumePage.jsx";
 import StudentRoadmapPage from "./pages/StudentRoadmapPage.jsx";
+import StudentPredictionPage from "./pages/StudentPredictionPage.jsx";
+import StudentMentorsPage from "./pages/StudentMentorsPage.jsx";
 import StudentApplicationsPage from "./pages/StudentApplicationsPage.jsx";
 import RecruiterApplicationsPage from "./pages/RecruiterApplicationsPage.jsx";
+import CandidateRankingPage from "./pages/CandidateRankingPage.jsx";
+import RecruiterAnalyticsPage from "./pages/RecruiterAnalyticsPage.jsx";
 import RecruiterDashboard from "./pages/RecruiterDashboard.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminStudents from "./pages/AdminStudents.jsx";
 import AdminRecruiters from "./pages/AdminRecruiters.jsx";
 import AdminAIServices from "./pages/AdminAIServices.jsx";
+import AdminAnalyticsDashboard from "./pages/AdminAnalyticsDashboard.jsx";
 import AdminSystemHealth from "./pages/AdminSystemHealth.jsx";
 import AdminSettings from "./pages/AdminSettings.jsx";
+import AlumniDashboard from "./pages/AlumniDashboard.jsx";
+import AlumniSlotsPage from "./pages/AlumniSlotsPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 
 function ScrollToTop() {
@@ -74,6 +81,22 @@ export default function App() {
             }
           />
           <Route
+            path="/dashboard/student/prediction"
+            element={
+              <ProtectedRoute allowedRoles={["ROLE_STUDENT"]}>
+                <StudentPredictionPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/student/mentors"
+            element={
+              <ProtectedRoute allowedRoles={["ROLE_STUDENT"]}>
+                <StudentMentorsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/dashboard/recruiter"
             element={
               <ProtectedRoute allowedRoles={["ROLE_RECRUITER"]}>
@@ -86,6 +109,22 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={["ROLE_RECRUITER"]}>
                 <RecruiterApplicationsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/recruiter/ranking"
+            element={
+              <ProtectedRoute allowedRoles={["ROLE_RECRUITER"]}>
+                <CandidateRankingPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/recruiter/analytics"
+            element={
+              <ProtectedRoute allowedRoles={["ROLE_RECRUITER"]}>
+                <RecruiterAnalyticsPage />
               </ProtectedRoute>
             }
           />
@@ -122,6 +161,14 @@ export default function App() {
             }
           />
           <Route
+            path="/dashboard/admin/analytics"
+            element={
+              <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
+                <AdminAnalyticsDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/dashboard/admin/system-health"
             element={
               <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
@@ -134,6 +181,22 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
                 <AdminSettings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/alumni"
+            element={
+              <ProtectedRoute allowedRoles={["ROLE_ALUMNI"]}>
+                <AlumniDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/alumni/slots"
+            element={
+              <ProtectedRoute allowedRoles={["ROLE_ALUMNI"]}>
+                <AlumniSlotsPage />
               </ProtectedRoute>
             }
           />

@@ -1,8 +1,10 @@
 package com.placenextai.controller;
 
+import com.placenextai.dto.InterviewExperienceResponse;
 import com.placenextai.dto.JobRequest;
 import com.placenextai.dto.JobResponse;
 import com.placenextai.dto.MessageResponse;
+import com.placenextai.service.InterviewExperienceService;
 import com.placenextai.service.JobService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.List;
 public class JobController {
 
     private final JobService jobService;
+    private final InterviewExperienceService interviewExperienceService;
 
     @GetMapping
     public ResponseEntity<List<JobResponse>> getAllJobs() {
@@ -28,6 +31,12 @@ public class JobController {
     @GetMapping("/{id}")
     public ResponseEntity<JobResponse> getJobById(@PathVariable Long id) {
         return ResponseEntity.ok(jobService.getJobById(id));
+    }
+
+    @GetMapping("/{id}/interview-experiences")
+    public ResponseEntity<List<InterviewExperienceResponse>> getInterviewExperiences(@PathVariable Long id) {
+        String company = jobService.getJobById(id).getCompany();
+        return ResponseEntity.ok(interviewExperienceService.getExperiencesForCompany(company));
     }
 
     @PostMapping

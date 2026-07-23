@@ -13,6 +13,7 @@ export const ROLE_HOME = {
   ROLE_STUDENT: "/dashboard/student",
   ROLE_RECRUITER: "/dashboard/recruiter",
   ROLE_ADMIN: "/dashboard/admin",
+  ROLE_ALUMNI: "/dashboard/alumni",
 };
 
 const AuthContext = createContext(null);
@@ -121,6 +122,18 @@ export function AuthProvider({ children }) {
     [scheduleAutoLogout]
   );
 
+  const registerAlumni = useCallback(
+    async (payload) => {
+      const authResponse = await authService.registerAlumni(payload);
+      setToken(authResponse.token);
+      const me = await authService.getMe();
+      setUser(me);
+      scheduleAutoLogout(authResponse.token);
+      return me;
+    },
+    [scheduleAutoLogout]
+  );
+
   const value = {
     user,
     initializing,
@@ -128,6 +141,7 @@ export function AuthProvider({ children }) {
     login,
     registerStudent,
     registerRecruiter,
+    registerAlumni,
     logout,
   };
 

@@ -10,4 +10,6 @@ public interface RecruiterFeedbackRepository extends JpaRepository<RecruiterFeed
     List<RecruiterFeedback> findByApplicationIdOrderByCreatedAtDesc(Long applicationId);
 
     List<RecruiterFeedback> findByStudentIdOrderByCreatedAtDesc(Long studentId);
+
+    long countByRecruiterId(Long recruiterId);
 }

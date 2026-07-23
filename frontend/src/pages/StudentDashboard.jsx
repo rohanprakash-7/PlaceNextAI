@@ -4,6 +4,9 @@ import { FiClock, FiUser } from "react-icons/fi";
 import DashboardLayout from "../components/dashboard/DashboardLayout.jsx";
 import ReadinessCard from "../components/readiness/ReadinessCard.jsx";
 import ActivityFeed from "../components/readiness/ActivityFeed.jsx";
+import SkillRadarChart from "../components/visualizations/SkillRadarChart.jsx";
+import WeeklyActivityHeatmap from "../components/visualizations/WeeklyActivityHeatmap.jsx";
+import BadgeShelf from "../components/badges/BadgeShelf.jsx";
 import { SkeletonBlock } from "../components/ui/Skeleton.jsx";
 import ErrorState from "../components/ui/ErrorState.jsx";
 import { STUDENT_NAV } from "../constants";
@@ -12,7 +15,9 @@ import {
   getReadiness,
   recomputeReadiness,
   getRecentEvents,
+  getActivityHeatmap,
 } from "../services/readinessService";
+import { getMyBadges } from "../services/badgeService";
 
 const ROLE_LABELS = {
   ROLE_STUDENT: "Student",
@@ -31,6 +36,8 @@ export default function StudentDashboard() {
 
   const [readiness, setReadiness] = useState(null);
   const [events, setEvents] = useState([]);
+  const [heatmap, setHeatmap] = useState([]);
+  const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [recomputing, setRecomputing] = useState(false);
@@ -39,9 +46,16 @@ export default function StudentDashboard() {
     setLoading(true);
     setError("");
     try {
-      const [readinessData, eventsData] = await Promise.all([getReadiness(), getRecentEvents()]);
+      const [readinessData, eventsData, heatmapData, badgeData] = await Promise.all([
+        getReadiness(),
+        getRecentEvents(),
+        getActivityHeatmap(90),
+        getMyBadges(),
+      ]);
       setReadiness(readinessData);
       setEvents(eventsData);
+      setHeatmap(heatmapData);
+      setBadges(badgeData);
     } catch (err) {
       setError(err.friendlyMessage || "Failed to load your readiness data");
     } finally {
@@ -141,6 +155,44 @@ export default function StudentDashboard() {
           </div>
           <ActivityFeed events={events} />
         </div>
+      )}
+
+      {!loading && !error && readiness && (
+        <div className="mt-5 grid gap-5 lg:grid-cols-2">
+          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-6">
+            <h2 className="font-display text-lg font-semibold text-white">Skill radar</h2>
+            <p className="mt-1 text-xs text-slate-500">The same five dimensions, plotted for shape at a glance</p>
+            <SkillRadarChart readiness={readiness} />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="glass-card p-6"
+          >
+            <h2 className="font-display text-lg font-semibold text-white">Activity, last 90 days</h2>
+            <p className="mt-1 text-xs text-slate-500">Darker squares mean more platform activity that day</p>
+            <div className="mt-4">
+              <WeeklyActivityHeatmap counts={heatmap} days={90} />
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {!loading && !error && badges.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="glass-card mt-5 p-6"
+        >
+          <h2 className="font-display text-lg font-semibold text-white">Achievements</h2>
+          <p className="mt-1 text-xs text-slate-500">Earned automatically as you use the platform</p>
+          <div className="mt-4">
+            <BadgeShelf badges={badges} />
+          </div>
+        </motion.div>
       )}
 
       <motion.div
