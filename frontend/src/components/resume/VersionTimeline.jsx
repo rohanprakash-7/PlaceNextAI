@@ -4,7 +4,7 @@ export default function VersionTimeline({ versions, selectedId, onSelect }) {
   // versions arrive newest-first; compare each against the one before it
   return (
     <div className="glass-card p-6">
-      <h2 className="font-display text-lg font-semibold text-white">Version history</h2>
+      <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Version history</h2>
       <p className="mt-1 text-xs text-slate-500">Watch your ATS score improve across versions.</p>
 
       <div className="mt-5 space-y-2">
@@ -26,11 +26,11 @@ export default function VersionTimeline({ versions, selectedId, onSelect }) {
                 "w-full rounded-xl border px-4 py-3.5 text-left transition-all " +
                 (selected
                   ? "border-primary-500/50 bg-primary-500/10"
-                  : "border-white/5 bg-white/[0.02] hover:border-white/15")
+                  : "border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.02] hover:border-slate-300 dark:hover:border-white/15")
               }
             >
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-white">
+                <span className="text-sm font-medium text-slate-900 dark:text-white">
                   v{version.versionNumber}
                   <span className="ml-2 text-xs font-normal text-slate-500">
                     {new Date(version.createdAt).toLocaleDateString()}
@@ -45,14 +45,14 @@ export default function VersionTimeline({ versions, selectedId, onSelect }) {
                           ? "bg-emerald-500/10 text-emerald-400"
                           : delta < 0
                             ? "bg-rose-500/10 text-rose-400"
-                            : "bg-slate-500/10 text-slate-400")
+                            : "bg-slate-500/10 text-slate-500 dark:text-slate-400")
                       }
                     >
                       {delta > 0 ? <FiArrowUpRight size={11} /> : delta < 0 ? <FiArrowDownRight size={11} /> : <FiMinus size={11} />}
                       {delta > 0 ? "+" + delta : delta}
                     </span>
                   )}
-                  <span className="font-display text-base font-semibold text-white">{version.atsScore}</span>
+                  <span className="font-display text-base font-semibold text-slate-900 dark:text-white">{version.atsScore}</span>
                 </span>
               </div>
               {added.length > 0 && (

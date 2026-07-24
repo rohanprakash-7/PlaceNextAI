@@ -36,6 +36,8 @@ public class Job {
     @Column(length = 500)
     private String skillsRequired;
 
+    private Double minCgpa;
+
     @Column(nullable = false, updatable = false)
     private LocalDate createdDate;
 

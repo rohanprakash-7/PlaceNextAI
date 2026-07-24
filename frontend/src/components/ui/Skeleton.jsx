@@ -1,5 +1,5 @@
 export function SkeletonBlock({ className = "" }) {
-  return <div className={"animate-pulse rounded-2xl bg-white/[0.06] " + className} />;
+  return <div className={"animate-pulse rounded-2xl bg-slate-200 dark:bg-white/[0.06] " + className} />;
 }
 
 export function TableSkeleton({ rows = 6, columns = 6 }) {
@@ -12,7 +12,7 @@ export function TableSkeleton({ rows = 6, columns = 6 }) {
           style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
         >
           {Array.from({ length: columns }).map((_, columnIndex) => (
-            <div key={columnIndex} className="h-5 animate-pulse rounded-lg bg-white/[0.06]" />
+            <div key={columnIndex} className="h-5 animate-pulse rounded-lg bg-slate-200 dark:bg-white/[0.06]" />
           ))}
         </div>
       ))}

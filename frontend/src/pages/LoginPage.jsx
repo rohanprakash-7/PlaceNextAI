@@ -12,6 +12,7 @@ import {
 } from "react-icons/fi";
 import Logo from "../components/ui/Logo.jsx";
 import GradientButton from "../components/ui/GradientButton.jsx";
+import ThemeToggle from "../components/ui/ThemeToggle.jsx";
 import { useAuth, ROLE_HOME } from "../context/AuthContext.jsx";
 
 export default function LoginPage() {
@@ -59,6 +60,10 @@ export default function LoginPage() {
     >
       <div className="pointer-events-none absolute inset-0 bg-grid-pattern bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,black,transparent)]" />
 
+      <div className="absolute right-5 top-5">
+        <ThemeToggle />
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: 28, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -69,10 +74,10 @@ export default function LoginPage() {
           <Logo />
         </div>
 
-        <h1 className="mt-7 text-center font-display text-2xl font-semibold text-white">
+        <h1 className="mt-7 text-center font-display text-2xl font-semibold text-slate-900 dark:text-white">
           Welcome back
         </h1>
-        <p className="mt-2 text-center text-sm text-slate-400">
+        <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-400">
           Sign in to continue your placement journey
         </p>
 
@@ -119,7 +124,7 @@ export default function LoginPage() {
               type="button"
               aria-label={showPassword ? "Hide password" : "Show password"}
               onClick={() => setShowPassword((visible) => !visible)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-300"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-700 dark:hover:text-slate-300"
             >
               {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
             </button>
@@ -138,7 +143,7 @@ export default function LoginPage() {
           </GradientButton>
         </form>
 
-        <p className="mt-7 text-center text-sm text-slate-400">
+        <p className="mt-7 text-center text-sm text-slate-500 dark:text-slate-400">
           New to PlaceNextAI?{" "}
           <Link to="/register" className="font-semibold text-primary-400 transition-colors hover:text-primary-500">
             Create an account

@@ -2,18 +2,25 @@ package com.placenextai.service.impl;
 
 import com.placenextai.dto.CreateMentorSlotRequest;
 import com.placenextai.dto.MentorBrowseResponse;
+import com.placenextai.dto.MentorProfileResponse;
+import com.placenextai.dto.MentorReviewResponse;
 import com.placenextai.dto.MentorSlotResponse;
 import com.placenextai.entity.Alumni;
 import com.placenextai.entity.EventType;
 import com.placenextai.entity.MentorSlot;
+import com.placenextai.entity.NotificationType;
 import com.placenextai.entity.Student;
 import com.placenextai.exception.DuplicateResourceException;
 import com.placenextai.exception.ResourceNotFoundException;
 import com.placenextai.repository.AlumniRepository;
+import com.placenextai.repository.MentorBookmarkRepository;
+import com.placenextai.repository.MentorReviewRepository;
 import com.placenextai.repository.MentorSlotRepository;
 import com.placenextai.repository.StudentRepository;
+import com.placenextai.service.EmailService;
 import com.placenextai.service.EventService;
 import com.placenextai.service.MentorSlotService;
+import com.placenextai.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -34,7 +41,11 @@ public class MentorSlotServiceImpl implements MentorSlotService {
     private final AlumniRepository alumniRepository;
     private final MentorSlotRepository mentorSlotRepository;
     private final StudentRepository studentRepository;
+    private final MentorReviewRepository mentorReviewRepository;
+    private final MentorBookmarkRepository mentorBookmarkRepository;
     private final EventService eventService;
+    private final NotificationService notificationService;
+    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -64,6 +75,23 @@ public class MentorSlotServiceImpl implements MentorSlotService {
     }
 
     @Override
+    @Transactional
+    public void deleteSlot(String alumniEmail, Long slotId) {
+        Alumni alumni = findAlumni(alumniEmail);
+        MentorSlot slot = mentorSlotRepository.findById(slotId)
+                .orElseThrow(() -> new ResourceNotFoundException("Mentor slot not found: " + slotId));
+
+        if (!slot.getAlumniId().equals(alumni.getId())) {
+            throw new AccessDeniedException("You do not have permission to delete this slot");
+        }
+        if (slot.isBooked()) {
+            throw new IllegalArgumentException("Cannot delete a slot that has already been booked");
+        }
+
+        mentorSlotRepository.delete(slot);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<MentorSlotResponse> getSessionsForAlumni(String alumniEmail) {
         Alumni alumni = findAlumni(alumniEmail);
@@ -74,13 +102,19 @@ public class MentorSlotServiceImpl implements MentorSlotService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MentorBrowseResponse> browseMentors() {
+    public List<MentorBrowseResponse> browseMentors(String studentEmail, String search, String company) {
+        Student student = studentRepository.findByEmail(studentEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with email: " + studentEmail));
+
         List<MentorSlot> openSlots = mentorSlotRepository
                 .findByBookedFalseAndStartTimeAfterOrderByStartTimeAsc(LocalDateTime.now());
         Map<Long, List<MentorSlot>> byAlumni = openSlots.stream()
                 .collect(Collectors.groupingBy(MentorSlot::getAlumniId));
 
-        return alumniRepository.findAll().stream()
+        String normalizedCompany = (company == null || company.isBlank()) ? null : company.trim();
+        String normalizedSearch = (search == null || search.isBlank()) ? null : search.trim();
+
+        return alumniRepository.search(normalizedCompany, normalizedSearch).stream()
                 .map(alumni -> MentorBrowseResponse.builder()
                         .alumniId(alumni.getId())
                         .fullName(alumni.getFullName())
@@ -88,11 +122,70 @@ public class MentorSlotServiceImpl implements MentorSlotService {
                         .designation(alumni.getDesignation())
                         .expertise(alumni.getExpertise())
                         .bio(alumni.getBio())
+                        .linkedinUrl(alumni.getLinkedinUrl())
+                        .profileImageUrl(alumni.getProfileImageUrl())
+                        .yearsOfExperience(alumni.getYearsOfExperience())
+                        .averageRating(mentorReviewRepository.averageRatingForAlumni(alumni.getId()))
+                        .reviewCount(mentorReviewRepository.countByAlumniId(alumni.getId()))
+                        .bookmarked(mentorBookmarkRepository.existsByStudentIdAndAlumniId(student.getId(), alumni.getId()))
                         .openSlots(byAlumni.getOrDefault(alumni.getId(), List.of()).stream()
                                 .map(slot -> toResponse(slot, alumni))
                                 .toList())
                         .build())
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> listMentorCompanies() {
+        return alumniRepository.findDistinctCompanies();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MentorProfileResponse getMentorProfile(String studentEmail, Long alumniId) {
+        Student student = studentRepository.findByEmail(studentEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with email: " + studentEmail));
+        Alumni alumni = findAlumniById(alumniId);
+
+        List<MentorSlot> openSlots = mentorSlotRepository
+                .findByBookedFalseAndStartTimeAfterOrderByStartTimeAsc(LocalDateTime.now())
+                .stream()
+                .filter(slot -> slot.getAlumniId().equals(alumniId))
+                .toList();
+
+        List<MentorReviewResponse> recentReviews = mentorReviewRepository
+                .findByAlumniIdOrderByCreatedAtDesc(alumniId).stream()
+                .map(review -> MentorReviewResponse.builder()
+                        .id(review.getId())
+                        .alumniId(review.getAlumniId())
+                        .studentId(review.getStudentId())
+                        .studentName(studentRepository.findById(review.getStudentId())
+                                .map(Student::getFullName).orElse("Student"))
+                        .rating(review.getRating())
+                        .comment(review.getComment())
+                        .createdAt(review.getCreatedAt())
+                        .build())
+                .limit(20)
+                .toList();
+
+        return MentorProfileResponse.builder()
+                .alumniId(alumni.getId())
+                .fullName(alumni.getFullName())
+                .currentCompany(alumni.getCurrentCompany())
+                .designation(alumni.getDesignation())
+                .graduationYear(alumni.getGraduationYear())
+                .expertise(alumni.getExpertise())
+                .bio(alumni.getBio())
+                .linkedinUrl(alumni.getLinkedinUrl())
+                .profileImageUrl(alumni.getProfileImageUrl())
+                .yearsOfExperience(alumni.getYearsOfExperience())
+                .averageRating(mentorReviewRepository.averageRatingForAlumni(alumni.getId()))
+                .reviewCount(mentorReviewRepository.countByAlumniId(alumni.getId()))
+                .bookmarked(mentorBookmarkRepository.existsByStudentIdAndAlumniId(student.getId(), alumni.getId()))
+                .openSlots(openSlots.stream().map(slot -> toResponse(slot, alumni)).toList())
+                .recentReviews(recentReviews)
+                .build();
     }
 
     @Override
@@ -114,6 +207,12 @@ public class MentorSlotServiceImpl implements MentorSlotService {
         Alumni alumni = findAlumniById(slot.getAlumniId());
         eventService.record(student.getId(), EventType.MENTOR_SESSION_BOOKED,
                 "Booked a mentor session with " + alumni.getFullName());
+
+        String message = student.getFullName() + " booked your session on "
+                + slot.getStartTime().format(DateTimeFormatter.ofPattern("dd MMM, h:mm a"));
+        notificationService.notify(alumni.getId(), "ROLE_ALUMNI", NotificationType.MENTOR_SESSION,
+                "Mentor session booked", message, "/dashboard/alumni/slots");
+        emailService.send(alumni.getEmail(), "Mentor session booked", message);
 
         return toResponse(saved, alumni);
     }

@@ -26,7 +26,7 @@ export default function Hero() {
         >
           <motion.span
             variants={item}
-            className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-slate-300"
+            className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300"
           >
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary-400" />
             Multi-agent AI for campus placements
@@ -34,13 +34,13 @@ export default function Hero() {
 
           <motion.h1
             variants={item}
-            className="mt-6 font-display text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl"
+            className="mt-6 font-display text-4xl font-semibold leading-[1.1] tracking-tight text-slate-900 dark:text-white sm:text-6xl"
           >
             Get placement-ready with <span className="text-gradient">AI that trains</span>, matches
             and hires
           </motion.h1>
 
-          <motion.p variants={item} className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-400 sm:text-lg">
+          <motion.p variants={item} className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-500 dark:text-slate-400 sm:text-lg">
             PlaceNextAI analyzes your resume, runs adaptive mock interviews and matches you to the
             right roles — while recruiters shortlist top candidates in seconds.
           </motion.p>
@@ -76,10 +76,10 @@ export default function Hero() {
           <div className="absolute -inset-x-8 -top-8 h-40 bg-brand-gradient opacity-20 blur-3xl" />
 
           <div className="glass-card relative overflow-hidden p-5 shadow-glow sm:p-7">
-            <div className="flex items-center justify-between border-b border-white/5 pb-4">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/5 pb-4">
               <div>
                 <p className="text-xs uppercase tracking-widest text-slate-500">Readiness score</p>
-                <p className="mt-1 font-display text-3xl font-semibold text-white">
+                <p className="mt-1 font-display text-3xl font-semibold text-slate-900 dark:text-white">
                   87<span className="text-lg text-slate-500">/100</span>
                 </p>
               </div>
@@ -94,10 +94,10 @@ export default function Hero() {
                 { label: "Interview skill", value: 81 },
                 { label: "DSA coverage", value: 74 },
               ].map((metric, index) => (
-                <div key={metric.label} className="rounded-xl bg-white/[0.03] p-4">
-                  <div className="flex items-center justify-between text-xs text-slate-400">
+                <div key={metric.label} className="rounded-xl bg-slate-50 dark:bg-white/[0.03] p-4">
+                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                     <span>{metric.label}</span>
-                    <span className="font-semibold text-white">{metric.value}%</span>
+                    <span className="font-semibold text-slate-900 dark:text-white">{metric.value}%</span>
                   </div>
                   <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/5">
                     <motion.div
@@ -122,8 +122,8 @@ export default function Hero() {
               <FiZap size={16} />
             </span>
             <div>
-              <p className="text-xs text-slate-400">AI shortlist</p>
-              <p className="text-sm font-semibold text-white">Top 5% match</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">AI shortlist</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Top 5% match</p>
             </div>
           </motion.div>
 
@@ -137,8 +137,8 @@ export default function Hero() {
               <FiCheckCircle size={16} />
             </span>
             <div>
-              <p className="text-xs text-slate-400">Mock interview</p>
-              <p className="text-sm font-semibold text-white">Round cleared</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Mock interview</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Round cleared</p>
             </div>
           </motion.div>
         </motion.div>

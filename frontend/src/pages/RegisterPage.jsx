@@ -16,6 +16,7 @@ import {
 } from "react-icons/fi";
 import Logo from "../components/ui/Logo.jsx";
 import GradientButton from "../components/ui/GradientButton.jsx";
+import ThemeToggle from "../components/ui/ThemeToggle.jsx";
 import { useAuth, ROLE_HOME } from "../context/AuthContext.jsx";
 
 const ROLES = [
@@ -95,6 +96,10 @@ export default function RegisterPage() {
     >
       <div className="pointer-events-none absolute inset-0 bg-grid-pattern bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,black,transparent)]" />
 
+      <div className="absolute right-5 top-5">
+        <ThemeToggle />
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: 28, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -105,10 +110,10 @@ export default function RegisterPage() {
           <Logo />
         </div>
 
-        <h1 className="mt-7 text-center font-display text-2xl font-semibold text-white">
+        <h1 className="mt-7 text-center font-display text-2xl font-semibold text-slate-900 dark:text-white">
           Create your account
         </h1>
-        <p className="mt-2 text-center text-sm text-slate-400">
+        <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-400">
           Start your AI-powered placement journey
         </p>
 
@@ -136,8 +141,8 @@ export default function RegisterPage() {
                 className={
                   "flex flex-col items-center gap-2 rounded-xl border py-4 text-sm font-medium transition-all duration-200 " +
                   (selected
-                    ? "border-primary-500/60 bg-primary-500/10 text-white shadow-glow-sm"
-                    : "border-white/10 bg-white/[0.03] text-slate-400 hover:border-white/20 hover:text-slate-200")
+                    ? "border-primary-500/60 bg-primary-500/10 text-slate-900 dark:text-white shadow-glow-sm"
+                    : "border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.03] text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/20 hover:text-slate-700 dark:hover:text-slate-200")
                 }
               >
                 <Icon size={18} className={selected ? "text-primary-400" : ""} />
@@ -222,7 +227,7 @@ export default function RegisterPage() {
               type="button"
               aria-label={showPassword ? "Hide password" : "Show password"}
               onClick={() => setShowPassword((visible) => !visible)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-300"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-700 dark:hover:text-slate-300"
             >
               {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
             </button>
@@ -245,7 +250,7 @@ export default function RegisterPage() {
           By creating an account you agree to our Terms of Service and Privacy Policy.
         </p>
 
-        <p className="mt-5 text-center text-sm text-slate-400">
+        <p className="mt-5 text-center text-sm text-slate-500 dark:text-slate-400">
           Already have an account?{" "}
           <Link to="/login" className="font-semibold text-primary-400 transition-colors hover:text-primary-500">
             Sign in

@@ -21,7 +21,7 @@ export default function ResumeUploadCard({ onUpload, uploading }) {
 
   return (
     <form onSubmit={handleSubmit} className="glass-card p-6">
-      <h2 className="font-display text-lg font-semibold text-white">Analyze a resume</h2>
+      <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Analyze a resume</h2>
       <p className="mt-1 text-xs text-slate-500">
         Upload a PDF. Add a target job description for a keyword-matched score.
       </p>
@@ -42,7 +42,7 @@ export default function ResumeUploadCard({ onUpload, uploading }) {
           "mt-5 flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-10 text-center transition-colors " +
           (dragOver
             ? "border-primary-500/70 bg-primary-500/10"
-            : "border-white/10 bg-white/[0.02] hover:border-primary-500/40")
+            : "border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] hover:border-primary-500/40")
         }
       >
         <input
@@ -55,7 +55,7 @@ export default function ResumeUploadCard({ onUpload, uploading }) {
         {file ? (
           <div className="flex items-center gap-3">
             <FiFileText className="text-primary-400" size={22} />
-            <span className="text-sm font-medium text-white">{file.name}</span>
+            <span className="text-sm font-medium text-slate-900 dark:text-white">{file.name}</span>
             <button
               type="button"
               aria-label="Remove file"
@@ -63,7 +63,7 @@ export default function ResumeUploadCard({ onUpload, uploading }) {
                 event.stopPropagation();
                 setFile(null);
               }}
-              className="glass flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:text-rose-400"
+              className="glass flex h-7 w-7 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-rose-400"
             >
               <FiX size={13} />
             </button>
@@ -71,14 +71,14 @@ export default function ResumeUploadCard({ onUpload, uploading }) {
         ) : (
           <>
             <FiUploadCloud className="text-slate-500" size={28} />
-            <p className="mt-3 text-sm text-slate-300">Drop your PDF here or click to browse</p>
+            <p className="mt-3 text-sm text-slate-700 dark:text-slate-300">Drop your PDF here or click to browse</p>
             <p className="mt-1 text-xs text-slate-500">Text-based PDF · max 5 MB</p>
           </>
         )}
       </div>
 
       <label className="mt-4 block">
-        <span className="mb-1.5 block text-xs font-medium text-slate-400">
+        <span className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">
           Target job description (optional)
         </span>
         <textarea

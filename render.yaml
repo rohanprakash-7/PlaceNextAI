@@ -1,0 +1,43 @@
+services:
+  # ---------- AI microservice (FastAPI) ----------
+  - type: web
+    name: placenextai-ai-service
+    runtime: docker
+    rootDir: ai-service
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000
+
+  # ---------- Backend (Spring Boot) ----------
+  - type: web
+    name: placenextai-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      # First deploy only: lets Hibernate create the schema on the fresh
+      # Aiven/Railway database. Remove this override (falls back to
+      # application-prod.properties' "validate") once tables exist.
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false # set to your deployed Vercel URL, e.g. https://your-app.vercel.app
+      - key: AI_SERVICE_BASE_URL
+        sync: false # set to the placenextai-ai-service URL from the Render dashboard
+      - key: MAIL_ENABLED
+        value: "false"

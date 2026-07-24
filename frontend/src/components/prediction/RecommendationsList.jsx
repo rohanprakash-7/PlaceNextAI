@@ -8,7 +8,7 @@ export default function RecommendationsList({ recommendations = [] }) {
   return (
     <div className="space-y-2.5">
       {recommendations.map((tip) => (
-        <div key={tip} className="flex items-start gap-2.5 text-sm text-slate-300">
+        <div key={tip} className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300">
           <FiCheckCircle className="mt-0.5 shrink-0 text-primary-400" size={15} />
           <span>{tip}</span>
         </div>

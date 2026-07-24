@@ -17,8 +17,8 @@ export default function PageHeader({ breadcrumbs, title, description, icon: Icon
           </span>
         )}
         <div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight text-white">{title}</h1>
-          <p className="mt-1 text-sm text-slate-400">{description}</p>
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">{title}</h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{description}</p>
         </div>
       </div>
     </motion.div>

@@ -15,4 +15,6 @@ public interface MentorSlotRepository extends JpaRepository<MentorSlot, Long> {
     List<MentorSlot> findByStudentIdOrderByStartTimeAsc(Long studentId);
 
     List<MentorSlot> findByAlumniIdAndBookedTrueOrderByStartTimeAsc(Long alumniId);
+
+    List<MentorSlot> findByBookedTrueAndReminderSentFalseAndStartTimeBetween(LocalDateTime from, LocalDateTime to);
 }

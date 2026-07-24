@@ -34,7 +34,7 @@ function timeAgo(dateString) {
 export default function ActivityFeed({ events }) {
   return (
     <div className="glass-card p-6">
-      <h2 className="font-display text-lg font-semibold text-white">Recent activity</h2>
+      <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Recent activity</h2>
       <p className="mt-1 text-xs text-slate-500">Every action here updates your readiness score.</p>
 
       {events.length === 0 ? (
@@ -52,13 +52,13 @@ export default function ActivityFeed({ events }) {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.35, delay: index * 0.06 }}
-                className="flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/[0.03]"
+                className="flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-slate-50 dark:hover:bg-white/[0.03]"
               >
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-primary-400">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-white/[0.06] text-primary-400">
                   <Icon size={14} />
                 </span>
                 <div className="min-w-0">
-                  <p className="text-sm text-slate-300">{event.payload || meta.label}</p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300">{event.payload || meta.label}</p>
                   <p className="mt-0.5 text-xs text-slate-500">{timeAgo(event.createdAt)}</p>
                 </div>
               </motion.div>

@@ -46,11 +46,11 @@ export default function AdminPage({
                 transition={{ duration: 0.45, delay: 0.1 + index * 0.07 }}
                 className="glass-card p-5"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.06] text-primary-400">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-white/[0.06] text-primary-400">
                   <Icon size={17} />
                 </span>
-                <p className="mt-4 font-display text-xl font-semibold text-white">{highlight.value}</p>
-                <p className="mt-1 text-sm text-slate-400">{highlight.label}</p>
+                <p className="mt-4 font-display text-xl font-semibold text-slate-900 dark:text-white">{highlight.value}</p>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{highlight.label}</p>
               </motion.div>
             );
           })}

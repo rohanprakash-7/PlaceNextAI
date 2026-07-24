@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FiCalendar, FiUsers, FiClock, FiSend, FiLoader } from "react-icons/fi";
+import { FiCalendar, FiUsers, FiClock, FiSend, FiLoader, FiMessageSquare, FiStar } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import DashboardLayout from "../components/dashboard/DashboardLayout.jsx";
 import StatCard from "../components/ui/StatCard.jsx";
 import ErrorState from "../components/ui/ErrorState.jsx";
@@ -9,13 +10,21 @@ import GradientButton from "../components/ui/GradientButton.jsx";
 import { SkeletonBlock } from "../components/ui/Skeleton.jsx";
 import { ALUMNI_NAV } from "../constants";
 import { useAuth } from "../context/AuthContext.jsx";
-import { getMySlots, getMyAlumniSessions, postInterviewExperience } from "../services/mentorService";
+import {
+  getMySlots,
+  getMyAlumniSessions,
+  getIncomingMentorRequests,
+  getMyAlumniProfile,
+  postInterviewExperience,
+} from "../services/mentorService";
 
 export default function AlumniDashboard() {
   const { user } = useAuth();
 
   const [slots, setSlots] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState(0);
+  const [rating, setRating] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -27,9 +36,16 @@ export default function AlumniDashboard() {
     setLoading(true);
     setError("");
     try {
-      const [slotData, sessionData] = await Promise.all([getMySlots(), getMyAlumniSessions()]);
+      const [slotData, sessionData, requestData, profileData] = await Promise.all([
+        getMySlots(),
+        getMyAlumniSessions(),
+        getIncomingMentorRequests(),
+        getMyAlumniProfile(),
+      ]);
       setSlots(slotData);
       setSessions(sessionData);
+      setPendingRequests(requestData.filter((request) => request.status === "PENDING").length);
+      setRating(profileData.averageRating);
     } catch (err) {
       setError(err.friendlyMessage || "Failed to load your mentor activity");
     } finally {
@@ -76,15 +92,19 @@ export default function AlumniDashboard() {
 
       {!loading && !error && (
         <>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-5">
             <StatCard icon={FiCalendar} label="Slots created" value={slots.length} />
             <StatCard icon={FiClock} label="Open slots" value={openSlots} />
             <StatCard icon={FiUsers} label="Booked sessions" value={sessions.length} />
+            <Link to="/dashboard/alumni/requests">
+              <StatCard icon={FiMessageSquare} label="Pending requests" value={pendingRequests} />
+            </Link>
+            <StatCard icon={FiStar} label="Average rating" value={rating ? rating.toFixed(1) : "—"} />
           </div>
 
           <div className="mt-6 grid gap-5 lg:grid-cols-2">
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-6">
-              <h2 className="font-display text-lg font-semibold text-white">Upcoming sessions</h2>
+              <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Upcoming sessions</h2>
               <div className="mt-4 space-y-3">
                 {sessions.length === 0 && (
                   <EmptyState
@@ -96,9 +116,9 @@ export default function AlumniDashboard() {
                 {sessions.map((session) => (
                   <div
                     key={session.id}
-                    className="rounded-xl border border-white/5 bg-white/[0.03] px-4 py-3.5"
+                    className="rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.03] px-4 py-3.5"
                   >
-                    <p className="text-sm font-medium text-white">
+                    <p className="text-sm font-medium text-slate-900 dark:text-white">
                       {new Date(session.startTime).toLocaleString()}
                     </p>
                     <p className="mt-0.5 text-xs text-slate-500">
@@ -115,7 +135,7 @@ export default function AlumniDashboard() {
               transition={{ delay: 0.1 }}
               className="glass-card p-6"
             >
-              <h2 className="font-display text-lg font-semibold text-white">Share an interview experience</h2>
+              <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Share an interview experience</h2>
               <p className="mt-1 text-xs text-slate-500">
                 Visible to students on the job listing for that company.
               </p>

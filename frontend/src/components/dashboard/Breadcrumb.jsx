@@ -9,13 +9,13 @@ export default function Breadcrumb({ items }) {
         return (
           <span key={item.label} className="flex items-center gap-1.5">
             {item.to && !isLast ? (
-              <Link to={item.to} className="transition-colors hover:text-slate-300">
+              <Link to={item.to} className="transition-colors hover:text-slate-900 dark:hover:text-slate-300">
                 {item.label}
               </Link>
             ) : (
-              <span className={isLast ? "font-medium text-slate-300" : ""}>{item.label}</span>
+              <span className={isLast ? "font-medium text-slate-900 dark:text-slate-300" : ""}>{item.label}</span>
             )}
-            {!isLast && <FiChevronRight size={12} className="text-slate-600" />}
+            {!isLast && <FiChevronRight size={12} className="text-slate-400 dark:text-slate-600" />}
           </span>
         );
       })}

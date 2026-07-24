@@ -8,6 +8,7 @@ import com.placenextai.entity.Application;
 import com.placenextai.entity.ApplicationStatus;
 import com.placenextai.entity.EventType;
 import com.placenextai.entity.Job;
+import com.placenextai.entity.NotificationType;
 import com.placenextai.entity.Recruiter;
 import com.placenextai.entity.Student;
 import com.placenextai.exception.DuplicateResourceException;
@@ -18,7 +19,10 @@ import com.placenextai.repository.RecruiterFeedbackRepository;
 import com.placenextai.repository.RecruiterRepository;
 import com.placenextai.repository.StudentRepository;
 import com.placenextai.service.ApplicationService;
+import com.placenextai.service.EmailService;
 import com.placenextai.service.EventService;
+import com.placenextai.service.NotificationService;
+import com.placenextai.service.RecruiterBadgeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -49,6 +53,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final JobRepository jobRepository;
     private final RecruiterFeedbackRepository feedbackRepository;
     private final EventService eventService;
+    private final RecruiterBadgeService recruiterBadgeService;
+    private final NotificationService notificationService;
+    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -70,6 +77,14 @@ public class ApplicationServiceImpl implements ApplicationService {
         Application saved = applicationRepository.save(application);
         eventService.record(student.getId(), EventType.APPLICATION_SUBMITTED,
                 "Applied to " + job.getTitle() + " at " + job.getCompany());
+
+        String message = student.getFullName() + " applied for " + job.getTitle();
+        for (Recruiter recruiter : recruiterRepository.findByCompanyNameIgnoreCase(job.getCompany())) {
+            notificationService.notify(recruiter.getId(), "ROLE_RECRUITER", NotificationType.APPLICATION_STATUS,
+                    "New application received", message, "/dashboard/recruiter/applications");
+            emailService.send(recruiter.getEmail(), "New application received", message);
+        }
+
         return toResponse(saved);
     }
 
@@ -125,9 +140,24 @@ public class ApplicationServiceImpl implements ApplicationService {
         Application saved = applicationRepository.save(application);
 
         eventService.record(application.getStudent().getId(), EventType.APPLICATION_STATUS_CHANGED,
-                application.getJob().getTitle() + " moved to " + status.name().replace("_", " "));
+                decisionMessage(status, application.getJob().getTitle(), application.getJob().getCompany()));
+        recruiterBadgeService.checkAndAward(recruiter.getId());
 
         return toResponse(saved);
+    }
+
+    /**
+     * OFFERED/HIRED/REJECTED are final decisions, not pipeline progress - the student
+     * should be told plainly whether they were selected rather than reading a generic
+     * "moved to X" status update.
+     */
+    private String decisionMessage(ApplicationStatus status, String jobTitle, String company) {
+        return switch (status) {
+            case OFFERED, HIRED -> "Congratulations! You've been selected for " + jobTitle + " at " + company + ".";
+            case REJECTED -> "You were not selected for " + jobTitle + " at " + company
+                    + " this time. Keep building - check your skill gap roadmap for the next opportunity.";
+            default -> jobTitle + " moved to " + status.name().replace("_", " ");
+        };
     }
 
     @Override

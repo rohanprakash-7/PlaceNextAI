@@ -2,6 +2,7 @@ package com.placenextai.service;
 
 import com.placenextai.dto.AlumniRegisterRequest;
 import com.placenextai.dto.AuthResponse;
+import com.placenextai.dto.ChangePasswordRequest;
 import com.placenextai.dto.LoginRequest;
 import com.placenextai.dto.MeResponse;
 import com.placenextai.dto.RecruiterRegisterRequest;
@@ -20,4 +21,6 @@ public interface AuthService {
     AuthResponse login(LoginRequest request);
 
     MeResponse getCurrentUser(String email);
+
+    void changePassword(String email, ChangePasswordRequest request);
 }

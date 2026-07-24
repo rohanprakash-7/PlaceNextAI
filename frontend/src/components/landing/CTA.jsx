@@ -16,11 +16,11 @@ export default function CTA() {
           <div className="pointer-events-none absolute -left-24 -top-24 h-64 w-64 rounded-full bg-primary-600/25 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-accent-600/25 blur-3xl" />
 
-          <h2 className="relative mx-auto max-w-2xl font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+          <h2 className="relative mx-auto max-w-2xl font-display text-3xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
             Ready to make your next placement season{" "}
             <span className="text-gradient">unstoppable?</span>
           </h2>
-          <p className="relative mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-400 sm:text-base">
+          <p className="relative mx-auto mt-4 max-w-xl text-sm leading-relaxed text-slate-500 dark:text-slate-400 sm:text-base">
             Join students sharpening their readiness score every day and recruiters who shortlist
             with confidence, not guesswork.
           </p>

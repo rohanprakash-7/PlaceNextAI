@@ -2,6 +2,7 @@ package com.placenextai.service.impl;
 
 import com.placenextai.dto.AlumniRegisterRequest;
 import com.placenextai.dto.AuthResponse;
+import com.placenextai.dto.ChangePasswordRequest;
 import com.placenextai.dto.LoginRequest;
 import com.placenextai.dto.MeResponse;
 import com.placenextai.dto.RecruiterRegisterRequest;
@@ -199,6 +200,49 @@ public class AuthServiceImpl implements AuthService {
                 .role(student.getRole())
                 .profileCompletion(studentCompletion(student))
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(String email, ChangePasswordRequest request) {
+        Optional<Admin> admin = adminRepository.findByEmail(email);
+        if (admin.isPresent()) {
+            Admin found = admin.get();
+            assertCurrentPasswordMatches(request.getCurrentPassword(), found.getPassword());
+            found.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            adminRepository.save(found);
+            return;
+        }
+
+        Optional<Recruiter> recruiter = recruiterRepository.findByEmail(email);
+        if (recruiter.isPresent()) {
+            Recruiter found = recruiter.get();
+            assertCurrentPasswordMatches(request.getCurrentPassword(), found.getPassword());
+            found.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            recruiterRepository.save(found);
+            return;
+        }
+
+        Optional<Alumni> alumni = alumniRepository.findByEmail(email);
+        if (alumni.isPresent()) {
+            Alumni found = alumni.get();
+            assertCurrentPasswordMatches(request.getCurrentPassword(), found.getPassword());
+            found.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            alumniRepository.save(found);
+            return;
+        }
+
+        Student student = studentRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("No account found with email: " + email));
+        assertCurrentPasswordMatches(request.getCurrentPassword(), student.getPassword());
+        student.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        studentRepository.save(student);
+    }
+
+    private void assertCurrentPasswordMatches(String rawPassword, String encodedPassword) {
+        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+            throw new BadCredentialsException("Current password is incorrect");
+        }
     }
 
     private int studentCompletion(Student student) {

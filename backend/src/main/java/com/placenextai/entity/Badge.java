@@ -27,4 +27,10 @@ public class Badge {
 
     @Column(nullable = false, length = 40)
     private String icon;
+
+    @Column(nullable = false, length = 20)
+    private String category;
+
+    @Column(nullable = false)
+    private Integer xpReward;
 }

@@ -25,8 +25,8 @@ export default function HowItWorks() {
               className="glass-card relative overflow-hidden p-7"
             >
               <span className="font-display text-5xl font-semibold text-white/[0.07]">{step.step}</span>
-              <h3 className="mt-4 font-display text-lg font-semibold text-white">{step.title}</h3>
-              <p className="mt-2.5 text-sm leading-relaxed text-slate-400">{step.description}</p>
+              <h3 className="mt-4 font-display text-lg font-semibold text-slate-900 dark:text-white">{step.title}</h3>
+              <p className="mt-2.5 text-sm leading-relaxed text-slate-500 dark:text-slate-400">{step.description}</p>
               <span className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-brand-gradient opacity-10 blur-2xl" />
             </motion.div>
           ))}

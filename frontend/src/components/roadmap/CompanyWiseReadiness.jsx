@@ -52,7 +52,7 @@ export default function CompanyWiseReadiness() {
     <div className="glass-card p-6">
       <div className="flex items-center gap-2">
         <FiTarget className="text-primary-400" size={16} />
-        <h2 className="font-display text-lg font-semibold text-white">Readiness by target company</h2>
+        <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Readiness by target company</h2>
       </div>
       <p className="mt-1 text-xs text-slate-500">How much of each company's required skill set you already cover</p>
 
@@ -60,8 +60,8 @@ export default function CompanyWiseReadiness() {
         {rows.map((row) => (
           <div key={row.company}>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-slate-300">{row.company}</span>
-              <span className="font-semibold text-white">{row.coverage}%</span>
+              <span className="text-slate-700 dark:text-slate-300">{row.company}</span>
+              <span className="font-semibold text-slate-900 dark:text-white">{row.coverage}%</span>
             </div>
             <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/5">
               <div className="h-full rounded-full bg-brand-gradient" style={{ width: row.coverage + "%" }} />

@@ -11,7 +11,7 @@ export default function StatCard({ icon: Icon, label, value, trend, trendUp = tr
       className="glass-card p-5"
     >
       <div className="flex items-start justify-between">
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.06] text-primary-400">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900/[0.06] text-primary-600 dark:bg-white/[0.06] dark:text-primary-400">
           <Icon size={18} />
         </span>
         {trend && (
@@ -26,8 +26,8 @@ export default function StatCard({ icon: Icon, label, value, trend, trendUp = tr
           </span>
         )}
       </div>
-      <p className="mt-4 font-display text-2xl font-semibold text-white">{value}</p>
-      <p className="mt-1 text-sm text-slate-400">{label}</p>
+      <p className="mt-4 font-display text-2xl font-semibold text-slate-900 dark:text-white">{value}</p>
+      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{label}</p>
     </motion.div>
   );
 }

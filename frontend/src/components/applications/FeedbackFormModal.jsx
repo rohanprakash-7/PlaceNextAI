@@ -20,8 +20,8 @@ function RatingSlider({ label, value, onChange }) {
   return (
     <div>
       <div className="flex items-center justify-between text-sm">
-        <span className="text-slate-300">{label}</span>
-        <span className="font-semibold text-white">{value} / 5</span>
+        <span className="text-slate-700 dark:text-slate-300">{label}</span>
+        <span className="font-semibold text-slate-900 dark:text-white">{value} / 5</span>
       </div>
       <input
         type="range"
@@ -64,14 +64,14 @@ export default function FeedbackFormModal({ open, onClose, onSubmit, applicantNa
         ))}
 
         <label className="block">
-          <span className="mb-1.5 block text-xs font-medium text-slate-400">Outcome</span>
+          <span className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Outcome</span>
           <select
             value={outcome}
             onChange={(event) => setOutcome(event.target.value)}
-            className="input-glass !pl-4 appearance-none bg-night-800"
+            className="input-glass !pl-4 appearance-none bg-slate-200 dark:bg-night-800"
           >
             {OUTCOME_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value} className="bg-night-800">
+              <option key={option.value} value={option.value} className="bg-slate-200 dark:bg-night-800">
                 {option.label}
               </option>
             ))}
@@ -79,7 +79,7 @@ export default function FeedbackFormModal({ open, onClose, onSubmit, applicantNa
         </label>
 
         <label className="block">
-          <span className="mb-1.5 block text-xs font-medium text-slate-400">Comment (optional)</span>
+          <span className="mb-1.5 block text-xs font-medium text-slate-500 dark:text-slate-400">Comment (optional)</span>
           <textarea
             value={comment}
             onChange={(event) => setComment(event.target.value)}

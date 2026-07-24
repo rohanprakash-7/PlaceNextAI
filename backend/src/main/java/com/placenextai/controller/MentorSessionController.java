@@ -2,6 +2,7 @@ package com.placenextai.controller;
 
 import com.placenextai.dto.BookMentorSessionRequest;
 import com.placenextai.dto.MentorBrowseResponse;
+import com.placenextai.dto.MentorProfileResponse;
 import com.placenextai.dto.MentorSlotResponse;
 import com.placenextai.service.MentorSlotService;
 import jakarta.validation.Valid;
@@ -23,8 +24,24 @@ public class MentorSessionController {
 
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/api/mentors")
-    public ResponseEntity<List<MentorBrowseResponse>> browseMentors() {
-        return ResponseEntity.ok(mentorSlotService.browseMentors());
+    public ResponseEntity<List<MentorBrowseResponse>> browseMentors(
+            Authentication authentication,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String company) {
+        return ResponseEntity.ok(mentorSlotService.browseMentors(authentication.getName(), search, company));
+    }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("/api/mentors/companies")
+    public ResponseEntity<List<String>> mentorCompanies() {
+        return ResponseEntity.ok(mentorSlotService.listMentorCompanies());
+    }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("/api/mentors/{alumniId}")
+    public ResponseEntity<MentorProfileResponse> mentorProfile(
+            Authentication authentication, @PathVariable Long alumniId) {
+        return ResponseEntity.ok(mentorSlotService.getMentorProfile(authentication.getName(), alumniId));
     }
 
     @PostMapping("/api/student/mentor-sessions/book")

@@ -14,10 +14,10 @@ export default function SectionHeading({ eyebrow, title, highlight, description 
           {eyebrow}
         </span>
       )}
-      <h2 className="font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+      <h2 className="font-display text-3xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
         {title} {highlight && <span className="text-gradient">{highlight}</span>}
       </h2>
-      {description && <p className="mt-4 text-base leading-relaxed text-slate-400">{description}</p>}
+      {description && <p className="mt-4 text-base leading-relaxed text-slate-500 dark:text-slate-400">{description}</p>}
     </motion.div>
   );
 }

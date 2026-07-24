@@ -10,4 +10,8 @@ public interface InterviewExperienceService {
     InterviewExperienceResponse postExperience(String alumniEmail, InterviewExperienceRequest request);
 
     List<InterviewExperienceResponse> getExperiencesForCompany(String company);
+
+    List<InterviewExperienceResponse> browse(String company, String search);
+
+    List<String> listCompanies();
 }

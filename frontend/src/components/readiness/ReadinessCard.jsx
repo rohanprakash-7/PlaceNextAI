@@ -10,7 +10,7 @@ export default function ReadinessCard({ readiness, onRecompute, recomputing }) {
         <div>
           <div className="flex items-center gap-2">
             <FiZap className="text-primary-400" size={16} />
-            <h2 className="font-display text-lg font-semibold text-white">Placement Readiness Score</h2>
+            <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Placement Readiness Score</h2>
           </div>
           <p className="mt-1 text-xs text-slate-500">
             Recomputed automatically on every action · last updated{" "}
@@ -21,7 +21,7 @@ export default function ReadinessCard({ readiness, onRecompute, recomputing }) {
           type="button"
           onClick={onRecompute}
           disabled={recomputing}
-          className="glass inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-medium text-slate-300 transition-colors hover:text-white disabled:opacity-50"
+          className="glass inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors hover:text-slate-900 dark:hover:text-white disabled:opacity-50"
         >
           <FiRefreshCw size={13} className={recomputing ? "animate-spin" : ""} />
           {recomputing ? "Recomputing…" : "Refresh"}
@@ -56,7 +56,7 @@ export default function ReadinessCard({ readiness, onRecompute, recomputing }) {
               </defs>
             </svg>
             <div className="text-center">
-              <p className="font-display text-4xl font-semibold text-white">{readiness.totalScore}</p>
+              <p className="font-display text-4xl font-semibold text-slate-900 dark:text-white">{readiness.totalScore}</p>
               <p className="text-xs text-slate-500">/ 100</p>
             </div>
           </div>
@@ -66,7 +66,7 @@ export default function ReadinessCard({ readiness, onRecompute, recomputing }) {
         <div className="flex-1">
           <BreakdownList readiness={readiness} />
           {readiness.improvementTip && (
-            <div className="mt-5 rounded-xl border border-primary-500/20 bg-primary-500/5 px-4 py-3 text-sm text-slate-300">
+            <div className="mt-5 rounded-xl border border-primary-500/20 bg-primary-500/5 px-4 py-3 text-sm text-slate-700 dark:text-slate-300">
               <span className="font-semibold text-primary-400">Next step: </span>
               {readiness.improvementTip}
             </div>

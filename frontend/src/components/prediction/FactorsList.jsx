@@ -20,7 +20,7 @@ function FactorRow({ factor, positive }) {
           {factor.label}
           <span className="ml-2 text-xs font-normal text-slate-500">{factor.impact}</span>
         </p>
-        <p className="mt-0.5 text-xs text-slate-400">{factor.description}</p>
+        <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{factor.description}</p>
       </div>
     </div>
   );

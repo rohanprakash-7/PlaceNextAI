@@ -39,6 +39,14 @@ public class Alumni {
     @Column(length = 1000)
     private String bio;
 
+    @Column(length = 300)
+    private String linkedinUrl;
+
+    @Column(length = 500)
+    private String profileImageUrl;
+
+    private Integer yearsOfExperience;
+
     @Column(nullable = false, length = 30)
     private String role;
 

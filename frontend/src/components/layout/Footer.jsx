@@ -4,7 +4,7 @@ import { FOOTER_LINKS } from "../../constants";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/5 bg-night-900/40">
+    <footer className="border-t border-slate-200 bg-slate-50 dark:border-white/5 dark:bg-night-900/40">
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
         <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(4,1fr)]">
           <div>
@@ -19,7 +19,7 @@ export default function Footer() {
                   key={index}
                   href="#"
                   aria-label="Social link"
-                  className="glass flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors hover:border-primary-500/40 hover:text-white"
+                  className="glass flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 transition-colors hover:border-primary-500/40 hover:text-slate-900 dark:hover:text-white"
                 >
                   <Icon size={16} />
                 </a>
@@ -29,11 +29,11 @@ export default function Footer() {
 
           {FOOTER_LINKS.map((column) => (
             <div key={column.heading}>
-              <h4 className="text-sm font-semibold text-white">{column.heading}</h4>
+              <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{column.heading}</h4>
               <ul className="mt-4 space-y-2.5">
                 {column.links.map((link) => (
                   <li key={link}>
-                    <a href="#" className="text-sm text-slate-500 transition-colors hover:text-slate-200">
+                    <a href="#" className="text-sm text-slate-500 transition-colors hover:text-slate-700 dark:hover:text-slate-200">
                       {link}
                     </a>
                   </li>
@@ -43,7 +43,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-6 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-200 dark:border-white/5 pt-6 sm:flex-row">
           <p className="text-xs text-slate-600">
             © {new Date().getFullYear()} PlaceNextAI. All rights reserved.
           </p>

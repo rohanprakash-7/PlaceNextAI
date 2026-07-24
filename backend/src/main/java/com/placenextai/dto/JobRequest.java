@@ -1,5 +1,7 @@
 package com.placenextai.dto;
 
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -29,4 +31,8 @@ public class JobRequest {
 
     @Size(max = 500)
     private String skillsRequired;
+
+    @DecimalMin(value = "0.0", message = "Minimum CGPA cannot be negative")
+    @DecimalMax(value = "10.0", message = "Minimum CGPA cannot exceed 10.0")
+    private Double minCgpa;
 }

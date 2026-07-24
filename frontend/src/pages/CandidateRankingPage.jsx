@@ -106,7 +106,7 @@ export default function CandidateRankingPage() {
             <div className="flex items-center gap-3">
               <FiZap className="text-primary-400" size={16} />
               <div>
-                <p className="text-sm font-semibold text-white">Rank candidates for</p>
+                <p className="text-sm font-semibold text-slate-900 dark:text-white">Rank candidates for</p>
                 <p className="text-xs text-slate-500">Explainable, weighted scoring - not a black box</p>
               </div>
             </div>
@@ -152,7 +152,7 @@ export default function CandidateRankingPage() {
                   type="button"
                   onClick={handleCompare}
                   disabled={selectedIds.length < 2}
-                  className="glass rounded-xl px-3.5 py-2 text-xs font-medium text-slate-300 transition-colors hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                  className="glass rounded-xl px-3.5 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors hover:text-slate-900 dark:hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   Compare selected ({selectedIds.length})
                 </button>

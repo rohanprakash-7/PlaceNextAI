@@ -34,4 +34,7 @@ public class MentorSlot {
     private boolean booked;
 
     private Long studentId;
+
+    @Column(nullable = false)
+    private boolean reminderSent;
 }

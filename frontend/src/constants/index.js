@@ -15,6 +15,12 @@ import {
   FiPieChart,
   FiAward,
   FiCalendar,
+  FiMessageSquare,
+  FiBookOpen,
+  FiUser,
+  FiStar,
+  FiCheckSquare,
+  FiBell,
 } from "react-icons/fi";
 
 export const APP_NAME = "PlaceNextAI";
@@ -102,21 +108,28 @@ export const STATS = [
 export const STUDENT_NAV = [
   { label: "Overview", icon: FiHome, to: "/dashboard/student" },
   { label: "Resume Analyzer", icon: FiFileText, to: "/dashboard/student/resume" },
-  { label: "Mock Interviews", icon: FiMic },
+  { label: "Mock Interviews", icon: FiMic, to: "/dashboard/student/interviews" },
   { label: "Applications", icon: FiBriefcase, to: "/dashboard/student/applications" },
   { label: "Skill Roadmap", icon: FiTrendingUp, to: "/dashboard/student/roadmap" },
+  { label: "Eligibility Checker", icon: FiCheckSquare, to: "/dashboard/student/eligibility" },
   { label: "Placement Prediction", icon: FiPieChart, to: "/dashboard/student/prediction" },
   { label: "Mentors", icon: FiAward, to: "/dashboard/student/mentors" },
-  { label: "Settings", icon: FiSettings },
+  { label: "Mentor Requests", icon: FiMessageSquare, to: "/dashboard/student/mentors/requests" },
+  { label: "Success Stories", icon: FiBookOpen, to: "/dashboard/student/success-stories" },
+  { label: "Achievements", icon: FiStar, to: "/dashboard/student/achievements" },
+  { label: "Leaderboard", icon: FiBarChart2, to: "/dashboard/student/leaderboard" },
+  { label: "Notifications", icon: FiBell, to: "/dashboard/student/notifications" },
+  { label: "Settings", icon: FiSettings, to: "/dashboard/student/settings" },
 ];
 
 export const RECRUITER_NAV = [
   { label: "Overview", icon: FiHome, to: "/dashboard/recruiter" },
-  { label: "Job Postings", icon: FiBriefcase },
+  { label: "Job Postings", icon: FiBriefcase, to: "/dashboard/recruiter/jobs" },
  { label: "Applications", icon: FiUsers, to: "/dashboard/recruiter/applications" },
   { label: "AI Shortlists", icon: FiZap, to: "/dashboard/recruiter/ranking" },
   { label: "Analytics", icon: FiBarChart2, to: "/dashboard/recruiter/analytics" },
-  { label: "Settings", icon: FiSettings },
+  { label: "Notifications", icon: FiBell, to: "/dashboard/recruiter/notifications" },
+  { label: "Settings", icon: FiSettings, to: "/dashboard/recruiter/settings" },
 ];
 
 export const ADMIN_NAV = [
@@ -126,13 +139,18 @@ export const ADMIN_NAV = [
   { label: "AI Services", icon: FiCpu, to: "/dashboard/admin/ai-services" },
   { label: "Analytics", icon: FiBarChart2, to: "/dashboard/admin/analytics" },
   { label: "System Health", icon: FiActivity, to: "/dashboard/admin/system-health" },
+  { label: "Notifications", icon: FiBell, to: "/dashboard/admin/notifications" },
   { label: "Settings", icon: FiSettings, to: "/dashboard/admin/settings" },
 ];
 
 export const ALUMNI_NAV = [
   { label: "Overview", icon: FiHome, to: "/dashboard/alumni" },
   { label: "My Slots", icon: FiCalendar, to: "/dashboard/alumni/slots" },
-  { label: "Settings", icon: FiSettings },
+  { label: "Mentor Requests", icon: FiMessageSquare, to: "/dashboard/alumni/requests" },
+  { label: "Success Stories", icon: FiBookOpen, to: "/dashboard/alumni/success-stories" },
+  { label: "My Profile", icon: FiUser, to: "/dashboard/alumni/profile" },
+  { label: "Notifications", icon: FiBell, to: "/dashboard/alumni/notifications" },
+  { label: "Settings", icon: FiSettings, to: "/dashboard/alumni/profile" },
 ];
 
 export const FOOTER_LINKS = [

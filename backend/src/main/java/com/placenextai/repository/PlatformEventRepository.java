@@ -26,4 +26,12 @@ public interface PlatformEventRepository extends JpaRepository<PlatformEvent, Lo
             + "WHERE e.studentId = :studentId AND e.createdAt >= :since "
             + "GROUP BY FUNCTION('DATE', e.createdAt)")
     List<Object[]> countByDaySince(@Param("studentId") Long studentId, @Param("since") LocalDateTime since);
+
+    // Platform-wide version of the above, for the admin activity heatmap - no studentId filter.
+    @Query("SELECT FUNCTION('DATE', e.createdAt), COUNT(e) FROM PlatformEvent e "
+            + "WHERE e.createdAt >= :since "
+            + "GROUP BY FUNCTION('DATE', e.createdAt)")
+    List<Object[]> countByDaySinceGlobal(@Param("since") LocalDateTime since);
+
+    long countByEventType(EventType eventType);
 }

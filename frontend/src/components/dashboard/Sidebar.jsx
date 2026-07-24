@@ -10,14 +10,14 @@ function SidebarContent({ navItems, roleLabel, onNavigate }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex h-16 items-center justify-between border-b border-white/5 px-5">
+      <div className="flex h-16 items-center justify-between border-b border-slate-200 px-5 dark:border-white/5">
         <Logo size="sm" />
         {onNavigate && (
           <button
             type="button"
             aria-label="Close sidebar"
             onClick={onNavigate}
-            className="glass flex h-8 w-8 items-center justify-center rounded-lg text-slate-300 lg:hidden"
+            className="glass flex h-8 w-8 items-center justify-center rounded-lg text-slate-600 dark:text-slate-300 lg:hidden"
           >
             <FiX size={15} />
           </button>
@@ -37,8 +37,8 @@ function SidebarContent({ navItems, roleLabel, onNavigate }) {
           const itemClasses =
             "group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 " +
             (active
-              ? "bg-white/[0.06] text-white shadow-glow-sm"
-              : "text-slate-400 hover:bg-white/[0.04] hover:text-white");
+              ? "bg-slate-900/[0.06] text-slate-900 shadow-glow-sm dark:bg-white/[0.06] dark:text-white"
+              : "text-slate-500 hover:bg-slate-900/[0.04] hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/[0.04] dark:hover:text-white");
           const iconClasses = active
             ? "text-primary-400"
             : "text-slate-500 transition-colors group-hover:text-primary-400";
@@ -62,11 +62,11 @@ function SidebarContent({ navItems, roleLabel, onNavigate }) {
         })}
       </nav>
 
-      <div className="border-t border-white/5 p-3">
+      <div className="border-t border-slate-200 p-3 dark:border-white/5">
         <button
           type="button"
           onClick={() => logout()}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-400 transition-colors hover:bg-rose-500/10 hover:text-rose-400"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-500 transition-colors hover:bg-rose-500/10 hover:text-rose-400 dark:text-slate-400"
         >
           <FiLogOut size={17} />
           Log out
@@ -79,7 +79,7 @@ function SidebarContent({ navItems, roleLabel, onNavigate }) {
 export default function Sidebar({ navItems, roleLabel, mobileOpen, onClose }) {
   return (
     <>
-      <aside className="glass-strong fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-white/5 lg:block">
+      <aside className="glass-strong fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-slate-200 dark:border-white/5 lg:block">
         <SidebarContent navItems={navItems} roleLabel={roleLabel} />
       </aside>
 
@@ -99,7 +99,7 @@ export default function Sidebar({ navItems, roleLabel, mobileOpen, onClose }) {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", stiffness: 320, damping: 32 }}
-              className="glass-strong fixed inset-y-0 left-0 z-50 w-72 border-r border-white/5 lg:hidden"
+              className="glass-strong fixed inset-y-0 left-0 z-50 w-72 border-r border-slate-200 dark:border-white/5 lg:hidden"
             >
               <SidebarContent navItems={navItems} roleLabel={roleLabel} onNavigate={onClose} />
             </motion.aside>

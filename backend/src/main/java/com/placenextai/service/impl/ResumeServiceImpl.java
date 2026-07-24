@@ -9,6 +9,7 @@ import com.placenextai.entity.Student;
 import com.placenextai.exception.ResourceNotFoundException;
 import com.placenextai.repository.ResumeVersionRepository;
 import com.placenextai.repository.StudentRepository;
+import com.placenextai.service.EligibilityService;
 import com.placenextai.service.EventService;
 import com.placenextai.service.ResumeService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class ResumeServiceImpl implements ResumeService {
     private final StudentRepository studentRepository;
     private final ResumeAiClient resumeAiClient;
     private final EventService eventService;
+    private final EligibilityService eligibilityService;
 
     @Override
     @Transactional
@@ -59,12 +63,13 @@ public class ResumeServiceImpl implements ResumeService {
         // Feed the readiness engine: resume dimension is now a REAL ATS score.
         student.setResumeScore(analysis.getAtsScore());
         student.setResumeUrl("internal://resume/v" + nextVersion);
+        student.setSkills(mergeSkills(student.getSkills(), analysis.getExtractedSkills()));
         studentRepository.save(student);
 
         eventService.record(student.getId(), EventType.RESUME_UPLOADED,
                 "Resume v" + nextVersion + " analyzed - ATS score " + analysis.getAtsScore());
 
-        return toResponse(version);
+        return toResponse(version, studentEmail);
     }
 
     @Override
@@ -72,7 +77,7 @@ public class ResumeServiceImpl implements ResumeService {
     public List<ResumeVersionResponse> getVersions(String studentEmail) {
         Student student = findStudent(studentEmail);
         return resumeVersionRepository.findByStudentIdOrderByVersionNumberDesc(student.getId()).stream()
-                .map(this::toResponse)
+                .map(version -> toResponse(version, studentEmail))
                 .toList();
     }
 
@@ -82,12 +87,36 @@ public class ResumeServiceImpl implements ResumeService {
         Student student = findStudent(studentEmail);
         ResumeVersion version = resumeVersionRepository.findByIdAndStudentId(versionId, student.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Resume version not found: " + versionId));
-        return toResponse(version);
+        return toResponse(version, studentEmail);
     }
 
     private Student findStudent(String email) {
         return studentRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with email: " + email));
+    }
+
+    private String mergeSkills(String existingCommaSeparated, List<String> extracted) {
+        Set<String> merged = new LinkedHashSet<>();
+        if (existingCommaSeparated != null && !existingCommaSeparated.isBlank()) {
+            for (String skill : existingCommaSeparated.split(",")) {
+                String trimmed = skill.trim();
+                if (!trimmed.isEmpty()) {
+                    merged.add(trimmed);
+                }
+            }
+        }
+        if (extracted != null) {
+            for (String skill : extracted) {
+                if (skill != null && !skill.isBlank()) {
+                    String trimmed = skill.trim();
+                    boolean alreadyPresent = merged.stream().anyMatch(existing -> existing.equalsIgnoreCase(trimmed));
+                    if (!alreadyPresent) {
+                        merged.add(trimmed);
+                    }
+                }
+            }
+        }
+        return String.join(",", merged);
     }
 
     private String join(List<String> values) {
@@ -101,7 +130,7 @@ public class ResumeServiceImpl implements ResumeService {
         return Arrays.stream(value.split(SEPARATOR)).filter(part -> !part.isBlank()).toList();
     }
 
-    private ResumeVersionResponse toResponse(ResumeVersion version) {
+    private ResumeVersionResponse toResponse(ResumeVersion version, String studentEmail) {
         return ResumeVersionResponse.builder()
                 .id(version.getId())
                 .versionNumber(version.getVersionNumber())
@@ -112,6 +141,7 @@ public class ResumeServiceImpl implements ResumeService {
                 .suggestions(split(version.getSuggestions()))
                 .wordCount(version.getWordCount())
                 .createdAt(version.getCreatedAt())
+                .eligibleCompanies(eligibilityService.listEligibleCompanies(studentEmail))
                 .build();
     }
 }

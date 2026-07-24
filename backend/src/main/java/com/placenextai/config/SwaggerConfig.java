@@ -19,8 +19,14 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("PlaceNextAI Backend API")
-                        .description("REST API for the PlaceNextAI placement platform: students, recruiters, admin, jobs and applications.")
-                        .version("v0.1.0")
+                        .description("""
+                                REST API for PlaceNextAI, an intelligent placement readiness, recruitment and \
+                                career success platform. Covers authentication, resume analysis, skill-gap \
+                                roadmaps, eligibility checking, AI mock interviews, job applications, alumni \
+                                mentorship, gamification, admin analytics, notifications and more. \
+                                All endpoints (except register/login and health) require a Bearer JWT - \
+                                obtain one via /api/auth/{role}/login and use \"Authorize\" below.""")
+                        .version("v1.0.0")
                         .contact(new Contact().name("PlaceNextAI Team")))
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
                 .components(new Components().addSecuritySchemes(

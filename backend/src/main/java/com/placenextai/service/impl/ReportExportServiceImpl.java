@@ -8,9 +8,16 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.placenextai.dto.AdminAnalyticsOverviewResponse;
+import com.placenextai.dto.AiPredictionAnalyticsResponse;
+import com.placenextai.dto.CollegeAnalyticsResponse;
 import com.placenextai.dto.DepartmentAnalyticsResponse;
+import com.placenextai.dto.HiringTrendResponse;
+import com.placenextai.dto.InterviewStatsResponse;
 import com.placenextai.dto.RecruiterActivityResponse;
+import com.placenextai.dto.ResumeStatsResponse;
 import com.placenextai.dto.RiskDistributionResponse;
+import com.placenextai.dto.SkillAnalyticsResponse;
+import com.placenextai.dto.StudentAnalyticsResponse;
 import com.placenextai.exception.AiServiceException;
 import com.placenextai.service.AdminAnalyticsService;
 import com.placenextai.service.ReportExportService;
@@ -40,6 +47,11 @@ public class ReportExportServiceImpl implements ReportExportService {
         List<DepartmentAnalyticsResponse> departments = adminAnalyticsService.departments();
         List<RecruiterActivityResponse> recruiters = adminAnalyticsService.recruiterActivity();
         RiskDistributionResponse risk = adminAnalyticsService.riskDistribution();
+        List<CollegeAnalyticsResponse> colleges = adminAnalyticsService.colleges();
+        List<HiringTrendResponse> hiringTrends = adminAnalyticsService.hiringTrends();
+        ResumeStatsResponse resumeStats = adminAnalyticsService.resumeStatistics();
+        InterviewStatsResponse interviewStats = adminAnalyticsService.interviewStatistics();
+        AiPredictionAnalyticsResponse aiPredictions = adminAnalyticsService.aiPredictionAnalytics();
 
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -91,6 +103,41 @@ public class ReportExportServiceImpl implements ReportExportService {
                 recruiterTable.addCell(cell(String.valueOf(recruiter.getFeedbackCount())));
             }
             document.add(recruiterTable);
+            document.add(new Paragraph(" "));
+
+            document.add(new Paragraph("College-wise Placement", headingFont));
+            PdfPTable collegeTable = new PdfPTable(4);
+            collegeTable.setWidthPercentage(100);
+            addHeaderRow(collegeTable, "College", "Students", "Avg. Readiness", "Placement %");
+            for (CollegeAnalyticsResponse college : colleges) {
+                collegeTable.addCell(cell(college.getCollege()));
+                collegeTable.addCell(cell(String.valueOf(college.getStudentCount())));
+                collegeTable.addCell(cell(String.valueOf(college.getAverageReadiness())));
+                collegeTable.addCell(cell(String.valueOf(college.getPlacementPercent())));
+            }
+            document.add(collegeTable);
+            document.add(new Paragraph(" "));
+
+            document.add(new Paragraph("Hiring Trends (last 6 months)", headingFont));
+            PdfPTable trendTable = new PdfPTable(3);
+            trendTable.setWidthPercentage(100);
+            addHeaderRow(trendTable, "Month", "Applications", "Hires");
+            for (HiringTrendResponse trend : hiringTrends) {
+                trendTable.addCell(cell(trend.getMonth()));
+                trendTable.addCell(cell(String.valueOf(trend.getApplications())));
+                trendTable.addCell(cell(String.valueOf(trend.getHires())));
+            }
+            document.add(trendTable);
+            document.add(new Paragraph(" "));
+
+            document.add(new Paragraph("Resume, Interview & AI Prediction Stats", headingFont));
+            document.add(new Paragraph("Resume versions: " + resumeStats.getTotalResumeVersions()
+                    + "   Avg. ATS score: " + resumeStats.getAverageAtsScore(), bodyFont));
+            document.add(new Paragraph("Mock interviews: " + interviewStats.getTotalMockInterviews()
+                    + "   Avg. score: " + interviewStats.getAverageMockInterviewScore()
+                    + "   Success stories shared: " + interviewStats.getTotalSuccessStories(), bodyFont));
+            document.add(new Paragraph("AI predictions computed: " + aiPredictions.getTotalPredictions()
+                    + "   Avg. placement probability: " + aiPredictions.getAverageProbability() + "%", bodyFont));
 
             document.close();
             return out.toByteArray();
@@ -105,6 +152,10 @@ public class ReportExportServiceImpl implements ReportExportService {
         AdminAnalyticsOverviewResponse overview = adminAnalyticsService.overview();
         List<DepartmentAnalyticsResponse> departments = adminAnalyticsService.departments();
         List<RecruiterActivityResponse> recruiters = adminAnalyticsService.recruiterActivity();
+        List<CollegeAnalyticsResponse> colleges = adminAnalyticsService.colleges();
+        List<HiringTrendResponse> hiringTrends = adminAnalyticsService.hiringTrends();
+        SkillAnalyticsResponse skills = adminAnalyticsService.skillAnalytics();
+        StudentAnalyticsResponse studentAnalytics = adminAnalyticsService.studentAnalytics();
 
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             Sheet overviewSheet = workbook.createSheet("Overview");
@@ -136,6 +187,46 @@ public class ReportExportServiceImpl implements ReportExportService {
                         String.valueOf(recruiter.getApplicationsReceived()),
                         String.valueOf(recruiter.getFeedbackCount()));
             }
+
+            Sheet collegeSheet = workbook.createSheet("Colleges");
+            writeRow(collegeSheet.createRow(0), "College", "Students", "Avg. Readiness", "Placement %");
+            int collegeRow = 1;
+            for (CollegeAnalyticsResponse college : colleges) {
+                writeRow(collegeSheet.createRow(collegeRow++),
+                        college.getCollege(),
+                        String.valueOf(college.getStudentCount()),
+                        String.valueOf(college.getAverageReadiness()),
+                        String.valueOf(college.getPlacementPercent()));
+            }
+
+            Sheet trendSheet = workbook.createSheet("Hiring Trends");
+            writeRow(trendSheet.createRow(0), "Month", "Applications", "Hires");
+            int trendRow = 1;
+            for (HiringTrendResponse trend : hiringTrends) {
+                writeRow(trendSheet.createRow(trendRow++),
+                        trend.getMonth(),
+                        String.valueOf(trend.getApplications()),
+                        String.valueOf(trend.getHires()));
+            }
+
+            Sheet skillSheet = workbook.createSheet("Skills");
+            writeRow(skillSheet.createRow(0), "Top Student Skills", "Count", "Top Demanded Skills", "Count");
+            int skillRow = 1;
+            int maxSkillRows = Math.max(skills.getTopStudentSkills().size(), skills.getTopDemandedSkills().size());
+            for (int i = 0; i < maxSkillRows; i++) {
+                String studentSkill = i < skills.getTopStudentSkills().size() ? skills.getTopStudentSkills().get(i).getSkill() : "";
+                String studentCount = i < skills.getTopStudentSkills().size() ? String.valueOf(skills.getTopStudentSkills().get(i).getCount()) : "";
+                String demandSkill = i < skills.getTopDemandedSkills().size() ? skills.getTopDemandedSkills().get(i).getSkill() : "";
+                String demandCount = i < skills.getTopDemandedSkills().size() ? String.valueOf(skills.getTopDemandedSkills().get(i).getCount()) : "";
+                writeRow(skillSheet.createRow(skillRow++), studentSkill, studentCount, demandSkill, demandCount);
+            }
+
+            Sheet studentSheet = workbook.createSheet("Student Stats");
+            writeRow(studentSheet.createRow(0), "Metric", "Value");
+            writeRow(studentSheet.createRow(1), "Total Students", String.valueOf(studentAnalytics.getTotalStudents()));
+            writeRow(studentSheet.createRow(2), "Avg Resume Score", String.valueOf(studentAnalytics.getAverageResumeScore()));
+            writeRow(studentSheet.createRow(3), "Avg Mock Interview Score", String.valueOf(studentAnalytics.getAverageMockInterviewScore()));
+            writeRow(studentSheet.createRow(4), "Avg CGPA", String.valueOf(studentAnalytics.getAverageCgpa()));
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             workbook.write(out);

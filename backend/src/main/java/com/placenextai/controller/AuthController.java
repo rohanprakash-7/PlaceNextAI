@@ -2,6 +2,7 @@ package com.placenextai.controller;
 
 import com.placenextai.dto.AlumniRegisterRequest;
 import com.placenextai.dto.AuthResponse;
+import com.placenextai.dto.ChangePasswordRequest;
 import com.placenextai.dto.LoginRequest;
 import com.placenextai.dto.MeResponse;
 import com.placenextai.dto.RecruiterRegisterRequest;
@@ -73,5 +74,12 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<MeResponse> me(Authentication authentication) {
         return ResponseEntity.ok(authService.getCurrentUser(authentication.getName()));
+    }
+
+    @PatchMapping("/change-password")
+    public ResponseEntity<Void> changePassword(
+            Authentication authentication, @Valid @RequestBody ChangePasswordRequest request) {
+        authService.changePassword(authentication.getName(), request);
+        return ResponseEntity.noContent().build();
     }
 }

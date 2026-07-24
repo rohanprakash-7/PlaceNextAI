@@ -3,6 +3,7 @@ package com.placenextai.controller;
 import com.placenextai.dto.*;
 import com.placenextai.service.AuthService;
 import com.placenextai.service.JobService;
+import com.placenextai.service.RecruiterProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ public class RecruiterController {
 
     private final AuthService authService;
     private final JobService jobService;
+    private final RecruiterProfileService recruiterProfileService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RecruiterRegisterRequest request) {
@@ -41,5 +43,16 @@ public class RecruiterController {
     @GetMapping("/jobs")
     public ResponseEntity<List<JobResponse>> getMyJobs(Authentication authentication) {
         return ResponseEntity.ok(jobService.getJobsForRecruiter(authentication.getName()));
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<RecruiterProfileResponse> getProfile(Authentication authentication) {
+        return ResponseEntity.ok(recruiterProfileService.getProfile(authentication.getName()));
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<RecruiterProfileResponse> updateProfile(
+            Authentication authentication, @Valid @RequestBody RecruiterUpdateRequest request) {
+        return ResponseEntity.ok(recruiterProfileService.updateProfile(authentication.getName(), request));
     }
 }

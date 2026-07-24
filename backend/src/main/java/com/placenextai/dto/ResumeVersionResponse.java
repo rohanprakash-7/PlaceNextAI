@@ -21,4 +21,5 @@ public class ResumeVersionResponse {
     private List<String> suggestions;
     private Integer wordCount;
     private LocalDateTime createdAt;
+    private List<EligibleCompanySummary> eligibleCompanies;
 }

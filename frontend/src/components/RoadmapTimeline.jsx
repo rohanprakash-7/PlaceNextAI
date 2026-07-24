@@ -6,14 +6,14 @@ export default function RoadmapTimeline({ roadmap, onComplete, completingId }) {
     <div className="glass-card p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-display text-lg font-semibold text-white">
+          <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">
             Roadmap · {roadmap.targetCompany}
           </h2>
           <p className="mt-1 text-xs text-slate-500">
             {roadmap.completedItems} of {roadmap.totalItems} weeks completed
           </p>
         </div>
-        <span className="font-display text-2xl font-semibold text-white">{roadmap.progressPercent}%</span>
+        <span className="font-display text-2xl font-semibold text-slate-900 dark:text-white">{roadmap.progressPercent}%</span>
       </div>
 
       <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/5">
@@ -38,7 +38,7 @@ export default function RoadmapTimeline({ roadmap, onComplete, completingId }) {
                 "flex items-start gap-3 rounded-xl border px-4 py-3.5 transition-colors " +
                 (item.completed
                   ? "border-emerald-500/20 bg-emerald-500/5"
-                  : "border-white/5 bg-white/[0.02]")
+                  : "border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.02]")
               }
             >
               <button
@@ -49,15 +49,15 @@ export default function RoadmapTimeline({ roadmap, onComplete, completingId }) {
                 className={
                   "mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-colors " +
                   (item.completed
-                    ? "border-emerald-500 bg-emerald-500 text-white"
-                    : "border-white/20 text-transparent hover:border-primary-400")
+                    ? "border-emerald-500 bg-emerald-500 text-slate-900 dark:text-white"
+                    : "border-slate-300 dark:border-white/20 text-transparent hover:border-primary-400")
                 }
               >
                 {item.completed ? <FiCheck size={13} /> : <FiCircle size={0} />}
               </button>
 
               <div className="min-w-0 flex-1">
-                <p className={"text-sm font-medium " + (item.completed ? "text-slate-400 line-through" : "text-white")}>
+                <p className={"text-sm font-medium " + (item.completed ? "text-slate-500 dark:text-slate-400 line-through" : "text-slate-900 dark:text-white")}>
                   {item.title}
                 </p>
                 <div className="mt-1.5 flex items-center gap-2">

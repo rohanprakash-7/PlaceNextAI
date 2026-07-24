@@ -99,7 +99,7 @@ export default function RecruiterAnalyticsPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FiBarChart2 className="text-primary-400" size={16} />
-                <h2 className="font-display text-lg font-semibold text-white">Hiring funnel</h2>
+                <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Hiring funnel</h2>
               </div>
               <span className="rounded-full bg-rose-500/10 px-2.5 py-1 text-xs font-semibold text-rose-400">
                 {rejectedCount} rejected
@@ -114,7 +114,7 @@ export default function RecruiterAnalyticsPage() {
             transition={{ delay: 0.1 }}
             className="glass-card p-6"
           >
-            <h2 className="font-display text-lg font-semibold text-white">Skill distribution</h2>
+            <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Skill distribution</h2>
             <p className="mt-1 text-xs text-slate-500">Applicants vs. jobs requiring each skill</p>
             <SkillDistributionChart data={skills} />
           </motion.div>
@@ -125,14 +125,14 @@ export default function RecruiterAnalyticsPage() {
             transition={{ delay: 0.2 }}
             className="glass-card p-6 lg:col-span-2"
           >
-            <h2 className="font-display text-lg font-semibold text-white">Applicants by department</h2>
+            <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Applicants by department</h2>
             <div className="mt-5 space-y-4">
               {departments.length === 0 && <p className="text-sm text-slate-500">No applicants yet.</p>}
               {departments.map((entry) => (
                 <div key={entry.branch}>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-300">{entry.branch}</span>
-                    <span className="font-semibold text-white">{entry.applicantCount}</span>
+                    <span className="text-slate-700 dark:text-slate-300">{entry.branch}</span>
+                    <span className="font-semibold text-slate-900 dark:text-white">{entry.applicantCount}</span>
                   </div>
                   <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/5">
                     <div

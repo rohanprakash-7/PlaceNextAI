@@ -7,7 +7,7 @@ export default function DashboardLayout({ navItems, roleLabel, title, userName, 
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-night-950 bg-page-glow">
+    <div className="min-h-screen bg-slate-50 bg-page-glow dark:bg-night-950">
       <Sidebar
         navItems={navItems}
         roleLabel={roleLabel}

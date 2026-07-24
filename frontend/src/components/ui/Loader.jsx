@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export default function Loader({ fullScreen = true, label = "PlaceNextAI" }) {
   const wrapper = fullScreen
-    ? "fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-night-950"
+    ? "fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-slate-50 dark:bg-night-950"
     : "flex flex-col items-center justify-center gap-6 py-20";
 
   return (

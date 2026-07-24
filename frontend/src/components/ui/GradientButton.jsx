@@ -16,7 +16,7 @@ export default function GradientButton({
   const variants = {
     primary: "bg-brand-gradient text-white shadow-glow-sm hover:shadow-glow",
     ghost:
-      "glass text-slate-200 hover:border-primary-500/40 hover:bg-white/[0.07] hover:text-white",
+      "glass text-slate-700 hover:border-primary-500/40 hover:bg-slate-900/5 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-white/[0.07] dark:hover:text-white",
   };
 
   const classes = base + " " + variants[variant] + " " + className;

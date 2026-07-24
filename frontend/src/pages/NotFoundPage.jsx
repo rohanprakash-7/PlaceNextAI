@@ -29,7 +29,7 @@ export default function NotFoundPage() {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, delay: 0.15 }}
-        className="relative mt-4 font-display text-2xl font-semibold text-white sm:text-3xl"
+        className="relative mt-4 font-display text-2xl font-semibold text-slate-900 dark:text-white sm:text-3xl"
       >
         This page went off the career map
       </motion.h1>
@@ -38,7 +38,7 @@ export default function NotFoundPage() {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, delay: 0.25 }}
-        className="relative mt-3 max-w-md text-sm leading-relaxed text-slate-400"
+        className="relative mt-3 max-w-md text-sm leading-relaxed text-slate-500 dark:text-slate-400"
       >
         The page you are looking for doesn't exist or has been moved. Let's get you back on the
         path to placement success.

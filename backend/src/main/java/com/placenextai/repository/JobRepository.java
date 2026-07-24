@@ -14,4 +14,6 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query("SELECT DISTINCT j.company FROM Job j ORDER BY j.company ASC")
     List<String> findDistinctCompanies();
+
+    boolean existsByCompanyIgnoreCaseAndTitleIgnoreCase(String company, String title);
 }

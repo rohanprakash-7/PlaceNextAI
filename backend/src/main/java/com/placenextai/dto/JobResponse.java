@@ -18,5 +18,6 @@ public class JobResponse {
     private String description;
     private String salary;
     private String skillsRequired;
+    private Double minCgpa;
     private LocalDate createdDate;
 }

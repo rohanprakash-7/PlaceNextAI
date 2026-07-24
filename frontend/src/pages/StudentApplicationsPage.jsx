@@ -34,15 +34,28 @@ function ApplicationRow({ application }) {
     setExpanded((current) => !current);
   };
 
+  const selected = application.status === "OFFERED" || application.status === "HIRED";
+  const notSelected = application.status === "REJECTED";
+
   return (
-    <div className="rounded-xl border border-white/5 bg-white/[0.02]">
+    <div className="rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.02]">
+      {selected && (
+        <div className="rounded-t-xl border-b border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-xs font-semibold text-emerald-500">
+          You've been selected for this role — congratulations!
+        </div>
+      )}
+      {notSelected && (
+        <div className="rounded-t-xl border-b border-rose-500/20 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-400">
+          Not selected this time — check your skill roadmap for the next opportunity.
+        </div>
+      )}
       <button
         type="button"
         onClick={toggle}
         className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left"
       >
         <div>
-          <p className="text-sm font-medium text-white">{application.jobTitle}</p>
+          <p className="text-sm font-medium text-slate-900 dark:text-white">{application.jobTitle}</p>
           <p className="mt-0.5 text-xs text-slate-500">{application.company}</p>
         </div>
         <div className="flex items-center gap-3">
@@ -60,7 +73,7 @@ function ApplicationRow({ application }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden border-t border-white/5"
+            className="overflow-hidden border-t border-slate-200 dark:border-white/5"
           >
             <div className="p-4">
               {loadingTimeline && <SkeletonBlock className="h-32" />}
@@ -125,7 +138,7 @@ export default function StudentApplicationsPage() {
       {!loading && !error && (
         <div className="grid gap-5 lg:grid-cols-3">
           <div className="glass-card p-6 lg:col-span-2">
-            <h2 className="font-display text-lg font-semibold text-white">Application timeline</h2>
+            <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Application timeline</h2>
             <p className="mt-1 text-xs text-slate-500">Click any application to see its interview stages.</p>
 
             {applications.length === 0 ? (

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { FiUsers, FiMessageSquare } from "react-icons/fi";
+import { FiUsers, FiMessageSquare, FiCheck, FiX } from "react-icons/fi";
 import DashboardLayout from "../components/dashboard/DashboardLayout.jsx";
 import StatusBadge, { humanizeStatus } from "../components/applications/StatusBadge.jsx";
 import FeedbackFormModal from "../components/applications/FeedbackFormModal.jsx";
@@ -98,13 +98,14 @@ export default function RecruiterApplicationsPage() {
 
         {!loading && !error && applications.length > 0 && (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] text-left text-sm">
+            <table className="w-full min-w-[880px] text-left text-sm">
               <thead>
-                <tr className="border-b border-white/5 text-xs uppercase tracking-wider text-slate-500">
+                <tr className="border-b border-slate-200 dark:border-white/5 text-xs uppercase tracking-wider text-slate-500">
                   <th className="px-5 py-3.5 font-medium">Candidate</th>
                   <th className="px-5 py-3.5 font-medium">Role</th>
                   <th className="px-5 py-3.5 font-medium">Applied</th>
-                  <th className="px-5 py-3.5 font-medium">Status</th>
+                  <th className="px-5 py-3.5 font-medium">Pipeline stage</th>
+                  <th className="px-5 py-3.5 font-medium">Final decision</th>
                   <th className="px-5 py-3.5 font-medium">Actions</th>
                 </tr>
               </thead>
@@ -112,13 +113,13 @@ export default function RecruiterApplicationsPage() {
                 {applications.map((application) => (
                   <tr
                     key={application.id}
-                    className="border-b border-white/5 transition-colors last:border-0 hover:bg-white/[0.03]"
+                    className="border-b border-slate-200 dark:border-white/5 transition-colors last:border-0 hover:bg-slate-50 dark:hover:bg-white/[0.03]"
                   >
                     <td className="px-5 py-3.5">
-                      <p className="font-medium text-white">{application.studentName}</p>
+                      <p className="font-medium text-slate-900 dark:text-white">{application.studentName}</p>
                       <p className="text-xs text-slate-500">{application.studentEmail}</p>
                     </td>
-                    <td className="px-5 py-3.5 text-slate-400">{application.jobTitle}</td>
+                    <td className="px-5 py-3.5 text-slate-500 dark:text-slate-400">{application.jobTitle}</td>
                     <td className="px-5 py-3.5 text-xs text-slate-500">
                       {new Date(application.appliedDate).toLocaleDateString()}
                     </td>
@@ -127,20 +128,50 @@ export default function RecruiterApplicationsPage() {
                         value={application.status}
                         disabled={updatingId === application.id}
                         onChange={(event) => handleStatusChange(application.id, event.target.value)}
-                        className="glass rounded-lg bg-night-800 px-2.5 py-1.5 text-xs text-slate-200 outline-none"
+                        className="glass rounded-lg bg-slate-200 dark:bg-night-800 px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-200 outline-none"
                       >
                         {STATUS_OPTIONS.map((status) => (
-                          <option key={status} value={status} className="bg-night-800">
+                          <option key={status} value={status} className="bg-slate-200 dark:bg-night-800">
                             {humanizeStatus(status)}
                           </option>
                         ))}
                       </select>
                     </td>
                     <td className="px-5 py-3.5">
+                      {application.status === "OFFERED" || application.status === "HIRED" ? (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-400">
+                          <FiCheck size={13} /> Selected
+                        </span>
+                      ) : application.status === "REJECTED" ? (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500/10 px-2.5 py-1 text-xs font-semibold text-rose-400">
+                          <FiX size={13} /> Not selected
+                        </span>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            disabled={updatingId === application.id}
+                            onClick={() => handleStatusChange(application.id, "OFFERED")}
+                            className="inline-flex items-center gap-1 rounded-lg bg-emerald-500/10 px-2.5 py-1.5 text-xs font-semibold text-emerald-400 transition-colors hover:bg-emerald-500/20 disabled:opacity-50"
+                          >
+                            <FiCheck size={13} /> Select
+                          </button>
+                          <button
+                            type="button"
+                            disabled={updatingId === application.id}
+                            onClick={() => handleStatusChange(application.id, "REJECTED")}
+                            className="inline-flex items-center gap-1 rounded-lg bg-rose-500/10 px-2.5 py-1.5 text-xs font-semibold text-rose-400 transition-colors hover:bg-rose-500/20 disabled:opacity-50"
+                          >
+                            <FiX size={13} /> Reject
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-5 py-3.5">
                       <button
                         type="button"
                         onClick={() => setFeedbackTarget(application)}
-                        className="glass inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-slate-300 transition-colors hover:text-primary-400"
+                        className="glass inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors hover:text-primary-400"
                       >
                         <FiMessageSquare size={13} /> Feedback
                       </button>

@@ -16,7 +16,7 @@ export default function BreakdownList({ readiness }) {
         return (
           <div key={dimension.label}>
             <div className="flex items-center justify-between text-sm">
-              <span className={weakest ? "font-medium text-amber-300" : "text-slate-300"}>
+              <span className={weakest ? "font-medium text-amber-300" : "text-slate-700 dark:text-slate-300"}>
                 {dimension.label}
                 {weakest && (
                   <span className="ml-2 rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-400">
@@ -24,7 +24,7 @@ export default function BreakdownList({ readiness }) {
                   </span>
                 )}
               </span>
-              <span className="font-semibold text-white">{dimension.value}</span>
+              <span className="font-semibold text-slate-900 dark:text-white">{dimension.value}</span>
             </div>
             <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/5">
               <motion.div

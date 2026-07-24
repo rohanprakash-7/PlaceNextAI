@@ -24,3 +24,7 @@ export async function getMe() {
   const { data } = await axiosClient.get("/auth/me");
   return data;
 }
+
+export async function changePassword(payload) {
+  await axiosClient.patch("/auth/change-password", payload);
+}

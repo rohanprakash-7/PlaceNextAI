@@ -31,17 +31,17 @@ export default function RankedCandidateCard({ candidate, rank, selected, onToggl
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-sm font-bold text-white">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-sm font-bold text-slate-900 dark:text-white">
             #{rank + 1}
           </span>
           <div>
-            <p className="font-display text-base font-semibold text-white">{candidate.studentName}</p>
+            <p className="font-display text-base font-semibold text-slate-900 dark:text-white">{candidate.studentName}</p>
             <p className="text-xs text-slate-500">{candidate.email}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <div className="text-right">
-            <p className="font-display text-xl font-semibold text-white">{candidate.rankScore}</p>
+            <p className="font-display text-xl font-semibold text-slate-900 dark:text-white">{candidate.rankScore}</p>
             <p className="text-[11px] uppercase tracking-wider text-slate-500">Rank score</p>
           </div>
           {onToggleSelect && (
@@ -50,7 +50,7 @@ export default function RankedCandidateCard({ candidate, rank, selected, onToggl
               checked={Boolean(selected)}
               onChange={() => onToggleSelect(candidate.studentId)}
               aria-label={"Select " + candidate.studentName + " for comparison"}
-              className="h-4 w-4 rounded border-white/20 bg-white/5 text-primary-500"
+              className="h-4 w-4 rounded border-slate-300 dark:border-white/20 bg-white dark:bg-white/5 text-primary-500"
             />
           )}
         </div>

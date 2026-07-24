@@ -22,13 +22,13 @@ export default function Modal({ open, onClose, title, children, maxWidth = "max-
               transition={{ duration: 0.3, ease: [0.21, 0.47, 0.32, 0.98] }}
               className={"glass-strong my-auto w-full rounded-2xl border border-white/10 " + maxWidth}
             >
-              <div className="flex items-center justify-between border-b border-white/5 px-6 py-4">
-                <h2 className="font-display text-lg font-semibold text-white">{title}</h2>
+              <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4 dark:border-white/5">
+                <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">{title}</h2>
                 <button
                   type="button"
                   aria-label="Close dialog"
                   onClick={onClose}
-                  className="glass flex h-8 w-8 items-center justify-center rounded-lg text-slate-300 transition-colors hover:text-white"
+                  className="glass flex h-8 w-8 items-center justify-center rounded-lg text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
                 >
                   <FiX size={15} />
                 </button>

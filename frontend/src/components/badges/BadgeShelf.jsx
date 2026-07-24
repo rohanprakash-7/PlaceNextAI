@@ -1,4 +1,21 @@
-import { FiSend, FiFileText, FiTrendingUp, FiMic, FiAward, FiLock } from "react-icons/fi";
+import { useState } from "react";
+import {
+  FiSend,
+  FiFileText,
+  FiTrendingUp,
+  FiMic,
+  FiAward,
+  FiLock,
+  FiCpu,
+  FiStar,
+  FiCheckCircle,
+  FiUsers,
+  FiZap,
+  FiBriefcase,
+  FiDownload,
+  FiLoader,
+} from "react-icons/fi";
+import { downloadBadgeCertificate } from "../../services/badgeService";
 
 const ICONS = {
   FiSend,
@@ -6,12 +23,29 @@ const ICONS = {
   FiTrendingUp,
   FiMic,
   FiAward,
+  FiCpu,
+  FiStar,
+  FiCheckCircle,
+  FiUsers,
+  FiZap,
+  FiBriefcase,
 };
 
-export default function BadgeShelf({ badges = [] }) {
+export default function BadgeShelf({ badges = [], allowCertificates = true }) {
+  const [downloadingCode, setDownloadingCode] = useState(null);
+
   if (badges.length === 0) {
     return null;
   }
+
+  const handleDownload = async (code) => {
+    setDownloadingCode(code);
+    try {
+      await downloadBadgeCertificate(code);
+    } finally {
+      setDownloadingCode(null);
+    }
+  };
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
@@ -22,21 +56,37 @@ export default function BadgeShelf({ badges = [] }) {
             key={badge.code}
             title={badge.description}
             className={
-              "flex flex-col items-center gap-2 rounded-xl border px-3 py-4 text-center transition-colors " +
+              "group relative flex flex-col items-center gap-2 rounded-xl border px-3 py-4 text-center transition-colors " +
               (badge.earned
                 ? "border-primary-500/30 bg-primary-500/10"
-                : "border-white/5 bg-white/[0.02] opacity-50")
+                : "border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.02] opacity-50")
             }
           >
             <span
               className={
                 "flex h-10 w-10 items-center justify-center rounded-xl " +
-                (badge.earned ? "bg-brand-gradient text-white" : "bg-white/5 text-slate-500")
+                (badge.earned ? "bg-brand-gradient text-slate-900 dark:text-white" : "bg-white/5 text-slate-500")
               }
             >
               {badge.earned ? <Icon size={18} /> : <FiLock size={16} />}
             </span>
-            <span className="text-xs font-medium text-slate-200">{badge.name}</span>
+            <span className="text-xs font-medium text-slate-700 dark:text-slate-200">{badge.name}</span>
+
+            {badge.earned && allowCertificates && (
+              <button
+                type="button"
+                onClick={() => handleDownload(badge.code)}
+                disabled={downloadingCode === badge.code}
+                aria-label={"Download certificate for " + badge.name}
+                className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-lg bg-black/30 text-slate-700 dark:text-slate-300 opacity-0 transition-opacity hover:text-slate-900 dark:hover:text-white group-hover:opacity-100 disabled:opacity-100"
+              >
+                {downloadingCode === badge.code ? (
+                  <FiLoader className="animate-spin" size={11} />
+                ) : (
+                  <FiDownload size={11} />
+                )}
+              </button>
+            )}
           </div>
         );
       })}

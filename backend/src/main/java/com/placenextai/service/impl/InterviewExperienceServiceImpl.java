@@ -46,6 +46,23 @@ public class InterviewExperienceServiceImpl implements InterviewExperienceServic
                 .toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<InterviewExperienceResponse> browse(String company, String search) {
+        String normalizedCompany = (company == null || company.isBlank()) ? null : company.trim();
+        String normalizedSearch = (search == null || search.isBlank()) ? null : search.trim();
+        return interviewExperienceRepository.search(normalizedCompany, normalizedSearch).stream()
+                .map(experience -> toResponse(experience, alumniRepository.findById(experience.getAlumniId())
+                        .orElse(null)))
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> listCompanies() {
+        return interviewExperienceRepository.findDistinctCompanies();
+    }
+
     private InterviewExperienceResponse toResponse(InterviewExperience experience, Alumni alumni) {
         return InterviewExperienceResponse.builder()
                 .id(experience.getId())

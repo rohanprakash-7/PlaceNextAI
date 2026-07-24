@@ -5,7 +5,7 @@ export default function TimelineStages({ timeline }) {
   if (timeline.rejected) {
     return (
       <div className="flex items-center gap-3 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3">
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-500 text-white">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-rose-500 text-slate-900 dark:text-white">
           <FiX size={15} />
         </span>
         <div>
@@ -36,8 +36,8 @@ export default function TimelineStages({ timeline }) {
               className={
                 "z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-colors " +
                 (stage.reached
-                  ? "border-primary-500 bg-primary-500 text-white"
-                  : "border-white/15 bg-night-900 text-transparent")
+                  ? "border-primary-500 bg-primary-500 text-slate-900 dark:text-white"
+                  : "border-slate-300 dark:border-white/15 bg-slate-100 dark:bg-night-900 text-transparent")
               }
             >
               {stage.reached && <FiCheck size={14} />}
@@ -45,7 +45,7 @@ export default function TimelineStages({ timeline }) {
             <span
               className={
                 "text-sm font-medium " +
-                (stage.current ? "text-white" : stage.reached ? "text-slate-300" : "text-slate-600")
+                (stage.current ? "text-slate-900 dark:text-white" : stage.reached ? "text-slate-700 dark:text-slate-300" : "text-slate-600")
               }
             >
               {stage.label}

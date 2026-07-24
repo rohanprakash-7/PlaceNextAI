@@ -17,5 +17,11 @@ public class MentorBrowseResponse {
     private String designation;
     private String expertise;
     private String bio;
+    private String linkedinUrl;
+    private String profileImageUrl;
+    private Integer yearsOfExperience;
+    private Double averageRating;
+    private Long reviewCount;
+    private boolean bookmarked;
     private List<MentorSlotResponse> openSlots;
 }

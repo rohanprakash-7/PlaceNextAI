@@ -49,14 +49,14 @@ export default function AdminDashboard() {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="glass-card p-6"
         >
-          <h2 className="font-display text-lg font-semibold text-white">Service health</h2>
+          <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Service health</h2>
           <div className="mt-5 space-y-3">
             {SERVICES.map((service) => {
               const healthy = service.status === "Operational";
               return (
                 <div
                   key={service.name}
-                  className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.03] px-4 py-3.5"
+                  className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/[0.03] px-4 py-3.5"
                 >
                   <div className="flex items-center gap-3">
                     <span
@@ -65,7 +65,7 @@ export default function AdminDashboard() {
                         (healthy ? "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)]" : "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.7)]")
                       }
                     />
-                    <span className="text-sm font-medium text-white">{service.name}</span>
+                    <span className="text-sm font-medium text-slate-900 dark:text-white">{service.name}</span>
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-xs text-slate-500">{service.latency}</span>
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
           transition={{ duration: 0.5, delay: 0.35 }}
           className="glass-card p-6"
         >
-          <h2 className="font-display text-lg font-semibold text-white">Recent activity</h2>
+          <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Recent activity</h2>
           <div className="mt-5 space-y-1">
             {ACTIVITY.map((entry, index) => (
               <motion.div
@@ -98,11 +98,11 @@ export default function AdminDashboard() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.45 + index * 0.09 }}
-                className="flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-white/[0.03]"
+                className="flex gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-white/[0.03]"
               >
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-400" />
                 <div>
-                  <p className="text-sm text-slate-300">{entry.text}</p>
+                  <p className="text-sm text-slate-700 dark:text-slate-300">{entry.text}</p>
                   <p className="mt-0.5 text-xs text-slate-500">{entry.time}</p>
                 </div>
               </motion.div>

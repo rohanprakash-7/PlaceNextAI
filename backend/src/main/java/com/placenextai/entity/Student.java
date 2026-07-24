@@ -3,6 +3,7 @@ package com.placenextai.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -53,6 +54,17 @@ public class Student {
 
     private Integer mockInterviewScore;
 
+    @Column(nullable = false)
+    private Integer xp;
+
+    @Column(nullable = false)
+    private Integer currentStreak;
+
+    @Column(nullable = false)
+    private Integer longestStreak;
+
+    private LocalDate lastActivityDate;
+
     @Column(length = 300)
     private String resumeUrl;
 
@@ -81,6 +93,15 @@ public class Student {
         }
         if (this.placementStatus == null) {
             this.placementStatus = PlacementStatus.NOT_PLACED;
+        }
+        if (this.xp == null) {
+            this.xp = 0;
+        }
+        if (this.currentStreak == null) {
+            this.currentStreak = 0;
+        }
+        if (this.longestStreak == null) {
+            this.longestStreak = 0;
         }
     }
 

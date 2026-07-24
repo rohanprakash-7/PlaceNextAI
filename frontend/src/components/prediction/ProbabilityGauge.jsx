@@ -38,7 +38,7 @@ export default function ProbabilityGauge({ probabilityScore, riskLevel }) {
           </defs>
         </svg>
         <div className="text-center">
-          <p className="font-display text-4xl font-semibold text-white">{probabilityScore}</p>
+          <p className="font-display text-4xl font-semibold text-slate-900 dark:text-white">{probabilityScore}</p>
           <p className="text-xs text-slate-500">/ 100</p>
         </div>
       </div>

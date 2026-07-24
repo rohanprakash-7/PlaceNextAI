@@ -68,7 +68,7 @@ export default function StudentPredictionPage() {
             <div>
               <div className="flex items-center gap-2">
                 <FiPieChart className="text-primary-400" size={16} />
-                <h2 className="font-display text-lg font-semibold text-white">Placement Probability</h2>
+                <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Placement Probability</h2>
               </div>
               <p className="mt-1 text-xs text-slate-500">
                 Explainable, not a black box · last updated{" "}
@@ -79,7 +79,7 @@ export default function StudentPredictionPage() {
               type="button"
               onClick={handleRecompute}
               disabled={recomputing}
-              className="glass inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-medium text-slate-300 transition-colors hover:text-white disabled:opacity-50"
+              className="glass inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors hover:text-slate-900 dark:hover:text-white disabled:opacity-50"
             >
               <FiRefreshCw size={13} className={recomputing ? "animate-spin" : ""} />
               {recomputing ? "Recomputing…" : "Refresh"}
@@ -91,7 +91,7 @@ export default function StudentPredictionPage() {
 
             <div className="flex-1 space-y-6">
               <div>
-                <h3 className="mb-3 text-sm font-semibold text-white">What's driving this score</h3>
+                <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-white">What's driving this score</h3>
                 <FactorsList
                   positiveFactors={prediction.positiveFactors}
                   negativeFactors={prediction.negativeFactors}
@@ -100,7 +100,7 @@ export default function StudentPredictionPage() {
 
               {prediction.recommendations?.length > 0 && (
                 <div>
-                  <h3 className="mb-3 text-sm font-semibold text-white">Recommendations</h3>
+                  <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-white">Recommendations</h3>
                   <RecommendationsList recommendations={prediction.recommendations} />
                 </div>
               )}

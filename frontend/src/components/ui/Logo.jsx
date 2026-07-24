@@ -16,7 +16,7 @@ export default function Logo({ to = "/", size = "md" }) {
       >
         <FiZap size={18} />
       </span>
-      <span className={textSize + " font-display font-semibold tracking-tight text-white"}>
+      <span className={textSize + " font-display font-semibold tracking-tight text-slate-900 dark:text-white"}>
         PlaceNext<span className="text-gradient">AI</span>
         <span className="sr-only">{APP_NAME}</span>
       </span>

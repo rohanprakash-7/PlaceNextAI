@@ -16,7 +16,7 @@ export default function Stats() {
               className="text-center"
             >
               <p className="font-display text-4xl font-semibold text-gradient">{stat.value}</p>
-              <p className="mt-2 text-sm text-slate-400">{stat.label}</p>
+              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{stat.label}</p>
             </motion.div>
           ))}
         </div>

@@ -14,7 +14,7 @@ export default function FeedbackSummaryCard({ summary }) {
       <div className="glass-card p-6">
         <div className="flex items-center gap-2">
           <FiMessageSquare className="text-primary-400" size={16} />
-          <h2 className="font-display text-lg font-semibold text-white">Recruiter feedback</h2>
+          <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Recruiter feedback</h2>
         </div>
         <p className="mt-3 text-sm text-slate-500">
           No feedback yet — once a recruiter reviews one of your applications, an anonymized
@@ -31,7 +31,7 @@ export default function FeedbackSummaryCard({ summary }) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <FiMessageSquare className="text-primary-400" size={16} />
-          <h2 className="font-display text-lg font-semibold text-white">Recruiter feedback</h2>
+          <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">Recruiter feedback</h2>
         </div>
         <span
           className={
@@ -40,7 +40,7 @@ export default function FeedbackSummaryCard({ summary }) {
               ? "bg-emerald-500/10 text-emerald-400"
               : summary.scoreAdjustment < 0
                 ? "bg-rose-500/10 text-rose-400"
-                : "bg-slate-500/10 text-slate-400")
+                : "bg-slate-500/10 text-slate-500 dark:text-slate-400")
           }
         >
           <AdjustmentIcon size={12} />
@@ -56,8 +56,8 @@ export default function FeedbackSummaryCard({ summary }) {
         {DIMENSIONS.map((dimension, index) => (
           <div key={dimension.key}>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-slate-300">{dimension.label}</span>
-              <span className="font-semibold text-white">{summary[dimension.key]} / 5</span>
+              <span className="text-slate-700 dark:text-slate-300">{dimension.label}</span>
+              <span className="font-semibold text-slate-900 dark:text-white">{summary[dimension.key]} / 5</span>
             </div>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/5">
               <motion.div
@@ -75,7 +75,7 @@ export default function FeedbackSummaryCard({ summary }) {
         <div className="mt-5 space-y-2">
           <p className="text-xs uppercase tracking-wider text-slate-500">Recent notes</p>
           {summary.recentComments.map((comment, index) => (
-            <p key={index} className="rounded-lg bg-white/[0.03] px-3 py-2 text-sm text-slate-300">
+            <p key={index} className="rounded-lg bg-slate-50 dark:bg-white/[0.03] px-3 py-2 text-sm text-slate-700 dark:text-slate-300">
               "{comment}"
             </p>
           ))}

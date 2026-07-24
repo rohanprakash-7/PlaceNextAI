@@ -20,14 +20,14 @@ export default function Features() {
               <GlassCard key={feature.title} delay={index * 0.08} className="group p-6">
                 <span
                   className={
-                    "inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-glow-sm transition-transform duration-300 group-hover:scale-110 " +
+                    "inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br text-slate-900 dark:text-white shadow-glow-sm transition-transform duration-300 group-hover:scale-110 " +
                     feature.accent
                   }
                 >
                   <Icon size={19} />
                 </span>
-                <h3 className="mt-5 font-display text-lg font-semibold text-white">{feature.title}</h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-slate-400">{feature.description}</p>
+                <h3 className="mt-5 font-display text-lg font-semibold text-slate-900 dark:text-white">{feature.title}</h3>
+                <p className="mt-2.5 text-sm leading-relaxed text-slate-500 dark:text-slate-400">{feature.description}</p>
               </GlassCard>
             );
           })}

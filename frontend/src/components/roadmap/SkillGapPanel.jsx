@@ -7,7 +7,7 @@ export default function SkillGapPanel({ gap, onGenerate, generating }) {
     <div className="glass-card p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-display text-lg font-semibold text-white">{gap.targetCompany}</h2>
+          <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">{gap.targetCompany}</h2>
           <p className="mt-1 text-xs text-slate-500">
             {gap.requiredSkills.length} skills required across their postings
           </p>

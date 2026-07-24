@@ -21,9 +21,10 @@ SKILL_DICTIONARY = [
     "machine learning", "deep learning", "nlp", "computer vision", "data science",
     "pandas", "numpy", "scikit-learn", "tensorflow", "pytorch", "transformers",
     "docker", "kubernetes", "aws", "azure", "gcp", "jenkins", "ci/cd", "linux", "git",
-    "data structures", "algorithms", "system design", "oops", "object oriented programming",
+    "data structures", "algorithms", "system design", "oops", "oop", "object oriented programming",
     "power bi", "tableau", "excel", "selenium", "junit", "pytest", "agile", "jira",
     "tailwind", "bootstrap", "figma", "communication", "leadership", "teamwork",
+    "ios", "cloud", "dbms", "devops", "testing", "networking", "data analysis", "c",
 ]
 
 SECTION_PATTERNS = {
