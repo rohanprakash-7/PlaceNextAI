@@ -86,52 +86,52 @@ export function AuthProvider({ children }) {
     return () => window.removeEventListener("auth:logout", onForcedLogout);
   }, [logout]);
 
-  const login = useCallback(
-    async (credentials) => {
-      const authResponse = await authService.login(credentials);
+  // A 2xx response with no JWT means the request never actually reached the
+  // backend (e.g. the frontend's API base URL is misconfigured and the call
+  // landed back on the SPA's own index.html instead). Trusting it silently
+  // used to store the literal string "undefined" as the token and navigate
+  // home with no visible error - fail loudly instead so it's diagnosable.
+  const applyAuthResponse = useCallback(
+    async (authResponse) => {
+      if (!authResponse || typeof authResponse.token !== "string" || !authResponse.token) {
+        const error = new Error("Malformed auth response - no token in the response body.");
+        error.friendlyMessage =
+          "The server sent back an unexpected response. This usually means the app " +
+          "isn't reaching the backend API - check the site's API URL configuration.";
+        throw error;
+      }
       setToken(authResponse.token);
       const me = await authService.getMe();
+      if (!me || typeof me.role !== "string") {
+        const error = new Error("Malformed /auth/me response - no role in the response body.");
+        error.friendlyMessage = "Signed in, but couldn't load your profile. Please try again.";
+        throw error;
+      }
       setUser(me);
       scheduleAutoLogout(authResponse.token);
       return me;
     },
     [scheduleAutoLogout]
+  );
+
+  const login = useCallback(
+    async (credentials) => applyAuthResponse(await authService.login(credentials)),
+    [applyAuthResponse]
   );
 
   const registerStudent = useCallback(
-    async (payload) => {
-      const authResponse = await authService.registerStudent(payload);
-      setToken(authResponse.token);
-      const me = await authService.getMe();
-      setUser(me);
-      scheduleAutoLogout(authResponse.token);
-      return me;
-    },
-    [scheduleAutoLogout]
+    async (payload) => applyAuthResponse(await authService.registerStudent(payload)),
+    [applyAuthResponse]
   );
 
   const registerRecruiter = useCallback(
-    async (payload) => {
-      const authResponse = await authService.registerRecruiter(payload);
-      setToken(authResponse.token);
-      const me = await authService.getMe();
-      setUser(me);
-      scheduleAutoLogout(authResponse.token);
-      return me;
-    },
-    [scheduleAutoLogout]
+    async (payload) => applyAuthResponse(await authService.registerRecruiter(payload)),
+    [applyAuthResponse]
   );
 
   const registerAlumni = useCallback(
-    async (payload) => {
-      const authResponse = await authService.registerAlumni(payload);
-      setToken(authResponse.token);
-      const me = await authService.getMe();
-      setUser(me);
-      scheduleAutoLogout(authResponse.token);
-      return me;
-    },
-    [scheduleAutoLogout]
+    async (payload) => applyAuthResponse(await authService.registerAlumni(payload)),
+    [applyAuthResponse]
   );
 
   const value = {
