@@ -119,6 +119,17 @@ Once live, copy the backend's URL, e.g. `https://placenextai-backend.onrender.co
 
 5. **Deploy.** Vercel gives you a URL like `https://placenextai.vercel.app`.
 
+### Alternative: Frontend on Render Static Site instead of Vercel
+
+Works the same way, with one gotcha that will otherwise break every route except `/`:
+
+1. Render dashboard → **New** → **Static Site** → same repo.
+2. **Root Directory:** `frontend`
+3. **Build Command:** `npm run build`
+4. **Publish Directory:** `dist`
+5. **Environment Variables:** same `VITE_API_BASE_URL` as above (Static Site builds still read Vite env vars at build time).
+6. **The gotcha:** a client-side-routed app (React Router) needs the server to serve `index.html` for *every* path (`/register`, `/login`, `/dashboard/...`), not just `/`. Without that, any hard navigation or refresh on those routes returns Render's 404 — or, if you added a catch-all rule in the dashboard set to **Redirect** instead of **Rewrite**, it bounces back to `/` (this is the exact "Create Account causes a full reload back to homepage" bug). The repo now ships `frontend/public/_redirects` (`/* /index.html 200`), which Vite copies into `dist/` on build and Render Static Sites auto-detect — so this is handled automatically as long as you're deploying from the current commit. If you'd previously added a manual Redirect/Rewrite rule in the Render dashboard, delete it so it doesn't conflict with the `_redirects` file.
+
 ---
 
 ## 6. Wire the URLs together (required — do this or CORS will block everything)
