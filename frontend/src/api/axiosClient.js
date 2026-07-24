@@ -1,8 +1,14 @@
 import axios from "axios";
 import { getToken, removeToken } from "../services/tokenService";
 
+// VITE_API_BASE_URL is the name used everywhere in this repo (.env.example,
+// .env.development, DEPLOYMENT.md). VITE_API_URL is accepted as a fallback
+// only to guard against a mistyped/mismatched variable name on a hosting
+// dashboard - it is not a second "real" convention, just a safety net.
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || "/api";
+
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "/api",
+  baseURL: apiBaseUrl,
   timeout: 15000,
   headers: { "Content-Type": "application/json" },
 });
