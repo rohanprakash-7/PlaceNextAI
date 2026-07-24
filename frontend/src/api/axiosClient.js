@@ -5,7 +5,17 @@ import { getToken, removeToken } from "../services/tokenService";
 // .env.development, DEPLOYMENT.md). VITE_API_URL is accepted as a fallback
 // only to guard against a mistyped/mismatched variable name on a hosting
 // dashboard - it is not a second "real" convention, just a safety net.
+const isConfigured = Boolean(import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL);
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || "/api";
+
+if (import.meta.env.PROD && !isConfigured) {
+  // eslint-disable-next-line no-console
+  console.error(
+    "[PlaceNextAI] VITE_API_BASE_URL is not set for this production build. " +
+      "API calls will hit this site's own origin instead of a real backend and fail. " +
+      "Set VITE_API_BASE_URL in the hosting provider's environment variables and rebuild."
+  );
+}
 
 const axiosClient = axios.create({
   baseURL: apiBaseUrl,
@@ -27,8 +37,18 @@ axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (!error.response) {
-      error.friendlyMessage =
-        "Cannot reach the server. Make sure the backend is running on port 8080.";
+      const attemptedUrl = (error.config?.baseURL || "") + (error.config?.url || "");
+      error.friendlyMessage = isConfigured
+        ? 'Cannot reach the server at "' +
+          attemptedUrl +
+          '". If this is a freshly deployed backend on a free hosting tier, it may ' +
+          "still be waking up from sleep - try again in a moment. Otherwise, verify " +
+          "the backend is running and its CORS settings allow this site's origin."
+        : "This deployment has no API URL configured (VITE_API_BASE_URL is missing), " +
+          'so the request went to "' +
+          attemptedUrl +
+          '" instead of a real backend. This is a build configuration issue, not a ' +
+          "local backend problem - set VITE_API_BASE_URL and rebuild.";
       return Promise.reject(error);
     }
 
