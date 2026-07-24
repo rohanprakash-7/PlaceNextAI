@@ -5,6 +5,7 @@ import com.placenextai.exception.AiServiceException;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Slf4j
 @Component
@@ -24,10 +26,15 @@ public class ResumeAiClient {
     // Bump this whenever the file changes: the marker below proves in the
     // startup log which version of this class is actually running.
     private static final String CLIENT_VERSION = "v3-simple-http11";
+    private static final String LOCALHOST_DEFAULT = "http://localhost:8000";
 
     private final RestClient restClient;
+    private final String baseUrl;
+    private final Environment environment;
 
-    public ResumeAiClient(@Value("${app.ai-service.base-url}") String baseUrl) {
+    public ResumeAiClient(@Value("${app.ai-service.base-url}") String baseUrl, Environment environment) {
+        this.baseUrl = baseUrl;
+        this.environment = environment;
         // HttpURLConnection-based factory: speaks plain HTTP/1.1 only.
         // It cannot send the h2c upgrade that was corrupting the multipart
         // body when the JDK HttpClient negotiated with uvicorn.
@@ -40,9 +47,22 @@ public class ResumeAiClient {
                 .build();
     }
 
+    // Same reasoning as CorsConfig's startup log: a misconfigured
+    // AI_SERVICE_BASE_URL is otherwise invisible until a real resume upload
+    // fails with a message written for local dev.
     @PostConstruct
     public void announce() {
         log.info(">>> ResumeAiClient {} loaded - plain HTTP/1.1 transport active <<<", CLIENT_VERSION);
+        log.info("AI service base URL resolved to: {}", baseUrl);
+        boolean isProd = Arrays.asList(environment.getActiveProfiles()).contains("prod");
+        if (isProd && LOCALHOST_DEFAULT.equals(baseUrl.trim())) {
+            log.warn(
+                    "AI_SERVICE_BASE_URL is not set and the 'prod' profile is active - " +
+                            "falling back to the local-dev default ({}). Resume analysis will " +
+                            "fail for every request until AI_SERVICE_BASE_URL is set to the " +
+                            "deployed AI service's actual URL.",
+                    LOCALHOST_DEFAULT);
+        }
     }
 
     public AiResumeAnalysis analyze(MultipartFile file, String jobDescription) {
@@ -74,9 +94,15 @@ public class ResumeAiClient {
                     exception.getResponseBodyAsString());
             throw new AiServiceException(extractDetail(exception));
         } catch (Exception exception) {
-            log.warn("AI service unreachable: {}", exception.getMessage());
-            throw new AiServiceException(
-                    "The AI service is not reachable. Start it with: uvicorn app.main:app --port 8000");
+            log.warn("AI service unreachable at {}: {}", baseUrl, exception.getMessage());
+            boolean usingLocalDefault = LOCALHOST_DEFAULT.equals(baseUrl.trim());
+            throw new AiServiceException(usingLocalDefault
+                    ? "The AI service is not reachable at " + baseUrl + " (local dev default). "
+                            + "If this is a deployed environment, set AI_SERVICE_BASE_URL and redeploy - "
+                            + "otherwise start it locally with: uvicorn app.main:app --port 8000"
+                    : "The AI service at " + baseUrl + " is not reachable. It may still be waking up "
+                            + "from sleep on a free hosting tier - try again in a moment, or verify it "
+                            + "is running.");
         }
     }
 

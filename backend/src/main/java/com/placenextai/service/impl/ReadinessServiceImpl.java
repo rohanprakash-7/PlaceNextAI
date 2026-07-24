@@ -41,7 +41,10 @@ public class ReadinessServiceImpl implements ReadinessService {
     );
 
     @Override
-    @Transactional(readOnly = true)
+    // Not read-only: a student's very first call here has no ReadinessScore
+    // row yet, so the orElseGet fallback below writes one via computeAndSave.
+    // A read-only transaction rejects that write outright.
+    @Transactional
     public ReadinessResponse getReadiness(String studentEmail) {
         Student student = findStudent(studentEmail);
         ReadinessScore latest = scoreRepository
